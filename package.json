@@ -1,0 +1,51 @@
+{
+  "name": "zangodb",
+  "version": "1.0.0",
+  "description": "MongoDB-like interface for HTML5 IndexedDB",
+  "main": "./build/src/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec build/test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erikolson186/zangodb.git"
+  },
+  "keywords": [
+    "database",
+    "nosql",
+    "browser",
+    "html5",
+    "indexeddb",
+    "mongodb",
+    "mongo"
+  ],
+  "author": "Erik Olson <erikolson186@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/erikolson186/zangodb/issues"
+  },
+  "homepage": "https://github.com/erikolson186/zangodb#readme",
+  "dependencies": {
+    "clone": "^2.0.0",
+    "deepmerge": "^1.2.0",
+    "memoizee": "^0.4.1",
+    "object-hash": "^1.1.4",
+    "q": "^1.4.1"
+  },
+  "devDependencies": {
+    "browserify": "^13.1.1",
+    "chai": "^3.5.0",
+    "fake-indexeddb": "^1.0.8",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-sourcemaps": "^2.2.0",
+    "gulp-uglify": "^2.0.0",
+    "mocha": "^3.1.2",
+    "run-sequence": "^1.2.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+    "templates": {
+        "applicationName": "ZangoDB",
+        "disqus": "",
+        "googleAnalytics": "",
+        
+        "openGraph": {
+            "title": "",
+            "type": "website",
+            "image": "",
+            "site_name": "",
+            "url": ""
+        },
+        
+        "meta": {
+            "title": "",
+            "description": "",
+            "keyword": ""
+        },
+        
+        "linenums": true
+    }
+}
+
