@@ -209,7 +209,7 @@ class Cursor extends EventEmitter {
 
             fn(doc);
 
-            this.forEach(fn, cb);
+            this._forEach(fn, cb);
         });
     }
 
@@ -325,6 +325,13 @@ class Cursor extends EventEmitter {
         return this;
     }
 
+    _addStage(fn, arg) {
+        this._assertUnopened();
+        this._pipeline.push([fn, arg]);
+
+        return this;
+    }
+
     /**
      * Limit the number of documents that can be iterated.
      * @param {number} num The limit.
@@ -333,12 +340,7 @@ class Cursor extends EventEmitter {
      * @example
      * col.find().limit(10);
      */
-    limit(num) {
-        this._assertUnopened();
-        this._pipeline.push([limit, num]);
-
-        return this;
-    }
+    limit(num) { return this._addStage(limit, num); }
 
     /**
      * Skip over a specified number of documents.
@@ -348,12 +350,7 @@ class Cursor extends EventEmitter {
      * @example
      * col.find().skip(4);
      */
-    skip(num) {
-        this._assertUnopened();
-        this._pipeline.push([skip, num]);
-
-        return this;
-    }
+    skip(num) { return this._addStage(skip, num); }
 
     /**
      * Add new fields, and include or exclude pre-existing fields.
@@ -363,12 +360,7 @@ class Cursor extends EventEmitter {
      * @example
      * col.find().project({ _id: 0, x: 1, n: { $add: ['$k', 4] } });
      */
-    project(spec) {
-        this._assertUnopened();
-        this._pipeline.push([project, spec]);
-
-        return this;
-    }
+    project(spec) { return this._addStage(project, spec); }
 
     /**
      * Group documents by an _id and optionally add computed fields.
@@ -382,12 +374,7 @@ class Cursor extends EventEmitter {
      *     count: { $sum: 1 }
      * });
      */
-    group(spec) {
-        this._assertUnopened();
-        this._pipeline.push([group, spec]);
-
-        return this;
-    }
+    group(spec) { return this._addStage(group, spec); }
 
     /**
      * Deconstruct an iterable and output a document for each element.
@@ -397,12 +384,7 @@ class Cursor extends EventEmitter {
      * @example
      * col.find().unwind('$elements');
      */
-    unwind(path) {
-        this._assertUnopened();
-        this._pipeline.push([unwind, path]);
-
-        return this;
-    }
+    unwind(path) { return this._addStage(unwind, path); }
 
     /**
      * Sort documents.
@@ -426,12 +408,7 @@ class Cursor extends EventEmitter {
      * // If x is indexed, it will be used for sorting.
      * col.find().sort({ x: 1 }).hint('x');
      */
-    sort(spec) {
-        this._assertUnopened();
-        this._pipeline.push([sort, spec]);
-
-        return this;
-    }
+    sort(spec) { return this._addStage(sort, spec); }
 
     _initSort(spec, clauses) {
         const new_clauses = [];
