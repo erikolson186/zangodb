@@ -291,7 +291,7 @@ var Cursor = function (_EventEmitter) {
 
                 fn(doc);
 
-                _this7.forEach(fn, cb);
+                _this7._forEach(fn, cb);
             });
         }
 
@@ -437,6 +437,14 @@ var Cursor = function (_EventEmitter) {
 
             return this;
         }
+    }, {
+        key: '_addStage',
+        value: function _addStage(fn, arg) {
+            this._assertUnopened();
+            this._pipeline.push([fn, arg]);
+
+            return this;
+        }
 
         /**
          * Limit the number of documents that can be iterated.
@@ -450,10 +458,7 @@ var Cursor = function (_EventEmitter) {
     }, {
         key: 'limit',
         value: function limit(num) {
-            this._assertUnopened();
-            this._pipeline.push([_limit, num]);
-
-            return this;
+            return this._addStage(_limit, num);
         }
 
         /**
@@ -468,10 +473,7 @@ var Cursor = function (_EventEmitter) {
     }, {
         key: 'skip',
         value: function skip(num) {
-            this._assertUnopened();
-            this._pipeline.push([_skip, num]);
-
-            return this;
+            return this._addStage(_skip, num);
         }
 
         /**
@@ -486,10 +488,7 @@ var Cursor = function (_EventEmitter) {
     }, {
         key: 'project',
         value: function project(spec) {
-            this._assertUnopened();
-            this._pipeline.push([_project, spec]);
-
-            return this;
+            return this._addStage(_project, spec);
         }
 
         /**
@@ -508,10 +507,7 @@ var Cursor = function (_EventEmitter) {
     }, {
         key: 'group',
         value: function group(spec) {
-            this._assertUnopened();
-            this._pipeline.push([_group, spec]);
-
-            return this;
+            return this._addStage(_group, spec);
         }
 
         /**
@@ -526,10 +522,7 @@ var Cursor = function (_EventEmitter) {
     }, {
         key: 'unwind',
         value: function unwind(path) {
-            this._assertUnopened();
-            this._pipeline.push([_unwind, path]);
-
-            return this;
+            return this._addStage(_unwind, path);
         }
 
         /**
@@ -558,10 +551,7 @@ var Cursor = function (_EventEmitter) {
     }, {
         key: 'sort',
         value: function sort(spec) {
-            this._assertUnopened();
-            this._pipeline.push([_sort, spec]);
-
-            return this;
+            return this._addStage(_sort, spec);
         }
     }, {
         key: '_initSort',

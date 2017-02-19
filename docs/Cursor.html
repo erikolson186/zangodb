@@ -152,6 +152,8 @@
             
                 <li data-name="Db#drop"><a href="Db.html#drop">drop</a></li>
             
+                <li data-name="Db#open"><a href="Db.html#open">open</a></li>
+            
             </ul>
             <ul class="events itemMembers">
             
@@ -177,7 +179,10 @@
     Cursor
     </h2>
     
-        <div class="class-description">Class representing a query cursor.<strong>Note:</strong> The filter, limit, skip, project, group,unwind and sort, methods each add an additional stage to thecursor pipeline and thus do not override any previous invocations.</div>
+        <div class="class-description">Class representing a query cursor.
+<strong>Note:</strong> The filter, limit, skip, project, group,
+unwind and sort, methods each add an additional stage to the
+cursor pipeline and thus do not override any previous invocations.</div>
     
 </header>  
 
@@ -611,7 +616,11 @@
         
 
     
-    <pre class="prettyprint"><code>col.find().forEach((doc) => {    console.log('doc:', doc);}, (error) => {    if (error) { throw error; }});</code></pre>
+    <pre class="prettyprint"><code>col.find().forEach((doc) => {
+    console.log('doc:', doc);
+}, (error) => {
+    if (error) { throw error; }
+});</code></pre>
     
 
     
@@ -628,7 +637,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 385
+            cursor.js, line 377
         </div>
         
     </div>
@@ -764,7 +773,11 @@
         
 
     
-    <pre class="prettyprint"><code>col.find().group({    _id: '$author',    books: { $push: '$book' },    count: { $sum: 1 }});</code></pre>
+    <pre class="prettyprint"><code>col.find().group({
+    _id: '$author',
+    books: { $push: '$book' },
+    count: { $sum: 1 }
+});</code></pre>
     
 
     
@@ -792,7 +805,9 @@
     
     
     <div class="description">
-        Suggest an index to use.<strong>Note:</strong> When an index hint is used only documentsthat contain the indexed path will be in the results.
+        Suggest an index to use.
+<strong>Note:</strong> When an index hint is used only documents
+that contain the indexed path will be in the results.
     </div>
     
 
@@ -934,7 +949,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 336
+            cursor.js, line 343
         </div>
         
     </div>
@@ -1087,7 +1102,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 366
+            cursor.js, line 363
         </div>
         
     </div>
@@ -1240,7 +1255,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 351
+            cursor.js, line 353
         </div>
         
     </div>
@@ -1393,7 +1408,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 429
+            cursor.js, line 411
         </div>
         
     </div>
@@ -1404,7 +1419,12 @@
     
     
     <div class="description">
-        Sort documents.<strong>Note:</strong> An index will not be used for sortingunless the query predicate references one of the fields tosort by or <a href="Cursor.html#hint">Cursor#hint</a> is used. This is so as not to excludedocuments that do not contain the indexed field, in accordancewith the functionality of MongoDB.
+        Sort documents.
+<strong>Note:</strong> An index will not be used for sorting
+unless the query predicate references one of the fields to
+sort by or <a href="Cursor.html#hint">Cursor#hint</a> is used. This is so as not to exclude
+documents that do not contain the indexed field, in accordance
+with the functionality of MongoDB.
     </div>
     
 
@@ -1529,17 +1549,20 @@
         
 
     
-    <pre class="prettyprint"><code>// No indexes will be used for sorting.col.find().sort({ x: 1 });</code></pre>
+    <pre class="prettyprint"><code>// No indexes will be used for sorting.
+col.find().sort({ x: 1 });</code></pre>
     
 
 
     
-    <pre class="prettyprint"><code>// If x is indexed, it will be used for sorting.col.find({ x: { $gt: 4 } }).sort({ x: 1 });</code></pre>
+    <pre class="prettyprint"><code>// If x is indexed, it will be used for sorting.
+col.find({ x: { $gt: 4 } }).sort({ x: 1 });</code></pre>
     
 
 
     
-    <pre class="prettyprint"><code>// If x is indexed, it will be used for sorting.col.find().sort({ x: 1 }).hint('x');</code></pre>
+    <pre class="prettyprint"><code>// If x is indexed, it will be used for sorting.
+col.find().sort({ x: 1 }).hint('x');</code></pre>
     
 
     
@@ -1699,7 +1722,13 @@
         
 
     
-    <pre class="prettyprint"><code>col.find().toArray((error, docs) => {    if (error) { throw error; }    for (let doc of docs) {        console.log('doc:', doc);    }});</code></pre>
+    <pre class="prettyprint"><code>col.find().toArray((error, docs) => {
+    if (error) { throw error; }
+
+    for (let doc of docs) {
+        console.log('doc:', doc);
+    }
+});</code></pre>
     
 
     
@@ -1716,7 +1745,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 400
+            cursor.js, line 387
         </div>
         
     </div>
@@ -2031,7 +2060,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Wed Nov 16 2016 17:19:15 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sat Feb 18 2017 20:41:33 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>

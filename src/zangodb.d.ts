@@ -34,6 +34,7 @@ declare module "zangodb" {
         name: string;
         version: number;
 
+        open(cb?: Callback): ResultCallback<Db>;
         close(): void;
         collection(name: string): Collection;
         drop(cb?: Callback): Promise<void>;

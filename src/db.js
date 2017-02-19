@@ -192,6 +192,24 @@ class Db extends EventEmitter {
     }
 
     /**
+     * Open connection to the database.
+     * @param {function} [cb] The result callback.
+     * @return {Promise}
+     */
+    open(cb) {
+        const deferred = Q.defer();
+
+        this._getConn((error) => {
+            if (error) { deferred.reject(error); }
+            else { deferred.resolve(this); }
+        });
+
+        deferred.promise.nodeify(cb);
+
+        return deferred.promise;
+    }
+
+    /**
      * Close the connection if it is open.
      */
     close() {

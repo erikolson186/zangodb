@@ -1,6 +1,6 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -274,6 +274,32 @@ var Db = function (_EventEmitter) {
             }
 
             return col;
+        }
+
+        /**
+         * Open connection to the database.
+         * @param {function} [cb] The result callback.
+         * @return {Promise}
+         */
+
+    }, {
+        key: 'open',
+        value: function open(cb) {
+            var _this3 = this;
+
+            var deferred = Q.defer();
+
+            this._getConn(function (error) {
+                if (error) {
+                    deferred.reject(error);
+                } else {
+                    deferred.resolve(_this3);
+                }
+            });
+
+            deferred.promise.nodeify(cb);
+
+            return deferred.promise;
         }
 
         /**
