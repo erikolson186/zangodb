@@ -1,10 +1,9 @@
-module.exports = (cur, num) => {
+module.exports = (_next, num) => {
     let count = 0;
 
     const next = (cb) => {
-        if (count++ < num) {
-            cur._next((error, doc) => cb(error, doc));
-        } else { cb(); }
+        if (count++ < num) { _next(cb); }
+        else { cb(); }
     };
 
     return next;

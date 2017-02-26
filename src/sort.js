@@ -34,7 +34,7 @@ const compare = (a, b, path_pieces, order) => {
     return order;
 };
 
-module.exports = (cur, spec) => {
+module.exports = (_next, spec) => {
     const sorts = [];
 
     for (let path in spec) {
@@ -51,18 +51,27 @@ module.exports = (cur, spec) => {
         return -order;
     };
 
-    let docs;
+    let docs = [];
 
     const fn = cb => cb(null, docs.pop());
 
     let next = (cb) => {
-        cur._toArray((error, _docs) => {
+        const done = (error) => {
             if (error) { return cb(error); }
 
-            docs = _docs.sort(sortFn);
+            docs = docs.sort(sortFn);
 
             (next = fn)(cb);
-        });
+        };
+
+        (function iterate() {
+            _next((error, doc) => {
+                if (!doc) { return done(error); }
+
+                docs.push(doc);
+                iterate();
+            });
+        })();
     };
 
     return cb => next(cb);

@@ -7,15 +7,15 @@ var getIDBError = _require.getIDBError;
 
 module.exports = function (cur, cb) {
     (function iterate() {
-        cur._next(function (error, doc) {
+        cur._next(function (error, doc, idb_cur) {
             if (!doc) {
                 return cb(error);
             }
 
-            var req = cur._idb_cur.delete();
+            var idb_req = idb_cur.delete();
 
-            req.onsuccess = iterate;
-            req.onerror = function (e) {
+            idb_req.onsuccess = iterate;
+            idb_req.onerror = function (e) {
                 return cb(getIDBError(e));
             };
         });

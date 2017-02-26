@@ -86,7 +86,7 @@ var _build = function _build(value1) {
     };
 };
 
-var project = function project(cur, spec) {
+var project = function project(_next, spec) {
     var toBool = function toBool(path) {
         return !!spec[path];
     };
@@ -171,7 +171,7 @@ var project = function project(cur, spec) {
     }
 
     var next = function next(cb) {
-        cur._next(function (error, doc) {
+        _next(function (error, doc) {
             if (!doc) {
                 return cb(error);
             }

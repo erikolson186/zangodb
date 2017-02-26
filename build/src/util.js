@@ -255,7 +255,11 @@ var unknownOp = function unknownOp(name) {
 };
 
 var hashify = function hashify(value) {
-    return value !== undefined ? objectHash(value) : undefined;
+    if (value === undefined) {
+        return;
+    }
+
+    return objectHash(value);
 };
 
 var getIDBError = function getIDBError(e) {

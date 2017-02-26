@@ -1,10 +1,10 @@
 "use strict";
 
-module.exports = function (cur, num) {
+module.exports = function (_next, num) {
     var count = 0;
 
     var next = function next(cb) {
-        cur._next(function (error, doc) {
+        _next(function (error, doc) {
             if (!doc) {
                 cb(error);
             } else if (++count > num) {

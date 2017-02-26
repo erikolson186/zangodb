@@ -57,7 +57,9 @@ const $push = (path_pieces, value) => {
     const update = (obj, field) => {
         const elements = obj[field];
 
-        if (Array.isArray(elements)) { elements.push(value); }
+        if (Array.isArray(elements)) {
+            elements.push(value);
+        }
     };
 
     const init = (obj, field) => obj[field] = [value];
@@ -116,15 +118,15 @@ module.exports = (cur, spec, cb) => {
     if (!steps.length) { return cb(null); }
 
     (function iterate() {
-        cur._next((error, doc) => {
+        cur._next((error, doc, idb_cur) => {
             if (!doc) { return cb(error); }
 
             for (let fn of steps) { fn(doc); }
 
-            const req = cur._idb_cur.update(doc);
+            const idb_req = idb_cur.update(doc);
 
-            req.onsuccess = iterate;
-            req.onerror = e => cb(getIDBError(e));
+            idb_req.onsuccess = iterate;
+            idb_req.onerror = e => cb(getIDBError(e));
         });
     })();
 };

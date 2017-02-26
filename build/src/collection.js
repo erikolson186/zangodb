@@ -39,36 +39,6 @@ var Collection = function () {
         value: function _isIndexed(path) {
             return this._indexes.has(path) || path === '_id';
         }
-    }, {
-        key: '_getIndexSize',
-        value: function _getIndexSize(path, cb) {
-            var _this = this;
-
-            var count = 0;
-
-            this._db._getConn(function (error, idb) {
-                if (error) {
-                    return cb(error);
-                }
-
-                var trans = idb.transaction([_this._name], 'readonly');
-
-                trans.oncomplete = function () {
-                    return cb(null, count);
-                };
-                trans.onerror = function (e) {
-                    return cb(getIDBError(e));
-                };
-
-                var store = trans.objectStore(_this._name),
-                    index = store.index(path),
-                    req = index.count();
-
-                req.onsuccess = function (e) {
-                    return count = e.target.result;
-                };
-            });
-        }
 
         /**
          * Open a cursor and optionally filter documents and apply a projection.
@@ -171,7 +141,7 @@ var Collection = function () {
     }, {
         key: 'insert',
         value: function insert(docs, cb) {
-            var _this2 = this;
+            var _this = this;
 
             if (!Array.isArray(docs)) {
                 docs = [docs];
@@ -183,7 +153,7 @@ var Collection = function () {
                 var trans = void 0;
 
                 try {
-                    trans = idb.transaction([_this2._name], 'readwrite');
+                    trans = idb.transaction([_this._name], 'readwrite');
                 } catch (error) {
                     return deferred.reject(error);
                 }
@@ -195,7 +165,7 @@ var Collection = function () {
                     return deferred.reject(getIDBError(e));
                 };
 
-                var store = trans.objectStore(_this2._name);
+                var store = trans.objectStore(_this._name);
 
                 var i = 0;
 
@@ -203,7 +173,7 @@ var Collection = function () {
                     var doc = docs[i];
 
                     try {
-                        _this2._validate(doc);
+                        _this._validate(doc);
                     } catch (error) {
                         return deferred.reject(error);
                     }

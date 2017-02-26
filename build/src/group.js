@@ -18,11 +18,8 @@ var _require = require('./util.js');
 
 var unknownOp = _require.unknownOp;
 var hashify = _require.hashify;
-
-
 var build = require('./lang/expression.js');
 var Fields = require('./lang/fields.js');
-
 var Operator = function () {
     function Operator() {
         _classCallCheck(this, Operator);
@@ -318,19 +315,30 @@ var runInEnd = function runInEnd(in_end, groups) {
     }
 };
 
-var groupLoopFn = function groupLoopFn(cur, in_end, groups, fn) {
+var groupLoopFn = function groupLoopFn(next, in_end, groups, fn) {
     return function (cb) {
-        cur._forEach(fn, function (error) {
+        var done = function done(error) {
             if (!error) {
                 runInEnd(in_end, groups);
             }
 
             cb(error, groups);
-        });
+        };
+
+        (function iterate() {
+            next(function (error, doc) {
+                if (!doc) {
+                    return done(error);
+                }
+
+                fn(doc);
+                iterate();
+            });
+        })();
     };
 };
 
-var initGroupByRef = function initGroupByRef(cur, expr, steps) {
+var createGroupByRefFn = function createGroupByRefFn(next, expr, steps) {
     var in_start = steps.in_start;
     var in_iter = steps.in_iter;
     var in_end = steps.in_end;
@@ -369,12 +377,12 @@ var initGroupByRef = function initGroupByRef(cur, expr, steps) {
         };
     }
 
-    return groupLoopFn(cur, in_end, groups, onDoc);
+    return groupLoopFn(next, in_end, groups, onDoc);
 };
 
-var initGroup = function initGroup(cur, expr, steps) {
+var createGroupFn = function createGroupFn(next, expr, steps) {
     if (expr.has_refs) {
-        return initGroupByRef(cur, expr, steps);
+        return createGroupByRefFn(next, expr, steps);
     }
 
     var in_start = steps.in_start;
@@ -383,7 +391,7 @@ var initGroup = function initGroup(cur, expr, steps) {
 
     var groups = [];
 
-    var createGroupDoc = function createGroupDoc() {
+    var initGroupDoc = function initGroupDoc() {
         var group_doc = { _id: expr.ast.run() };
 
         runSteps(in_start, group_doc);
@@ -395,11 +403,11 @@ var initGroup = function initGroup(cur, expr, steps) {
     if (in_iter.length) {
         var _ret = function () {
             var add = memoize(function () {
-                return createGroupDoc();
+                return initGroupDoc();
             });
 
             return {
-                v: groupLoopFn(cur, in_end, groups, function (doc) {
+                v: groupLoopFn(next, in_end, groups, function (doc) {
                     runSteps(in_iter, add(), doc);
                 })
             };
@@ -409,9 +417,9 @@ var initGroup = function initGroup(cur, expr, steps) {
     }
 
     return function (cb) {
-        cur._next(function (error, doc) {
+        next(function (error, doc) {
             if (doc) {
-                createGroupDoc();
+                initGroupDoc();
 
                 runInEnd(in_end, groups);
             }
@@ -486,7 +494,7 @@ var _build = function _build(steps, field, value) {
     });
 };
 
-module.exports = function (cur, spec) {
+module.exports = function (_next, spec) {
     if (!spec.hasOwnProperty('_id')) {
         throw Error("the '_id' field is missing");
     }
@@ -506,14 +514,14 @@ module.exports = function (cur, spec) {
         _build(steps, field, new_spec[field]);
     }
 
-    var group = initGroup(cur, expr, steps);
+    var group = createGroupFn(_next, expr, steps);
 
-    var _next = function next(cb) {
+    var _next2 = function next(cb) {
         group(function (error, groups) {
             if (error) {
                 cb(error);
             } else {
-                (_next = function next(cb) {
+                (_next2 = function next(cb) {
                     return cb(null, groups.pop());
                 })(cb);
             }
@@ -521,6 +529,6 @@ module.exports = function (cur, spec) {
     };
 
     return function (cb) {
-        return _next(cb);
+        return _next2(cb);
     };
 };

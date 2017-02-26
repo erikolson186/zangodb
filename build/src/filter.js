@@ -2,14 +2,14 @@
 
 var Fields = require('./lang/fields.js');
 
-module.exports = function (cur, pred) {
+module.exports = function (next, pred) {
     return function (cb) {
         (function iterate() {
-            cur._next(function (error, doc) {
+            next(function (error, doc, idb_cur) {
                 if (!doc) {
                     cb(error);
                 } else if (pred.run(new Fields(doc))) {
-                    cb(null, doc);
+                    cb(null, doc, idb_cur);
                 } else {
                     iterate();
                 }

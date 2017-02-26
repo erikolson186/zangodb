@@ -47,7 +47,7 @@ var compare = function compare(a, b, path_pieces, order) {
     return order;
 };
 
-module.exports = function (cur, spec) {
+module.exports = function (_next, spec) {
     var sorts = [];
 
     for (var path in spec) {
@@ -90,25 +90,36 @@ module.exports = function (cur, spec) {
         return -order;
     };
 
-    var docs = void 0;
+    var docs = [];
 
     var fn = function fn(cb) {
         return cb(null, docs.pop());
     };
 
-    var _next = function next(cb) {
-        cur._toArray(function (error, _docs) {
+    var _next2 = function next(cb) {
+        var done = function done(error) {
             if (error) {
                 return cb(error);
             }
 
-            docs = _docs.sort(sortFn);
+            docs = docs.sort(sortFn);
 
-            (_next = fn)(cb);
-        });
+            (_next2 = fn)(cb);
+        };
+
+        (function iterate() {
+            _next(function (error, doc) {
+                if (!doc) {
+                    return done(error);
+                }
+
+                docs.push(doc);
+                iterate();
+            });
+        })();
     };
 
     return function (cb) {
-        return _next(cb);
+        return _next2(cb);
     };
 };

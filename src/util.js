@@ -185,7 +185,9 @@ const unknownOp = (name) => {
 };
 
 const hashify = (value) => {
-    return value !== undefined ? objectHash(value) : undefined;
+    if (value === undefined) { return; }
+
+    return objectHash(value);
 };
 
 const getIDBError = e => Error(e.target.error.message);

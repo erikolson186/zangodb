@@ -34,7 +34,7 @@ const _build = (value1) => {
     };
 };
 
-const project = (cur, spec) => {
+const project = (_next, spec) => {
     const toBool = path => !!spec[path];
     let _id_bool = true;
 
@@ -112,7 +112,7 @@ const project = (cur, spec) => {
     }
 
     const next = (cb) => {
-        cur._next((error, doc) => {
+        _next((error, doc) => {
             if (!doc) { return cb(error); }
 
             let new_doc = doc;

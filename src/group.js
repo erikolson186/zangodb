@@ -1,12 +1,8 @@
 const memoize = require('memoizee');
 
-const {
-    unknownOp,
-    hashify
-} = require('./util.js');
-
-const build = require('./lang/expression.js');
-const Fields = require('./lang/fields.js');
+const { unknownOp, hashify } = require('./util.js'),
+      build = require('./lang/expression.js'),
+      Fields = require('./lang/fields.js');
 
 class Operator {
     get value() { return this._value; }
@@ -138,15 +134,24 @@ const runInEnd = (in_end, groups) => {
     }
 };
 
-const groupLoopFn = (cur, in_end, groups, fn) => (cb) => {
-    cur._forEach(fn, (error) => {
+const groupLoopFn = (next, in_end, groups, fn) => (cb) => {
+    const done = (error) => {
         if (!error) { runInEnd(in_end, groups); }
 
         cb(error, groups);
-    });
+    };
+
+    (function iterate() {
+        next((error, doc) => {
+            if (!doc) { return done(error); }
+
+            fn(doc);
+            iterate();
+        });
+    })();
 };
 
-const initGroupByRef = (cur, expr, steps) => {
+const createGroupByRefFn = (next, expr, steps) => {
     const { in_start, in_iter, in_end } = steps;
     const groups = [];
 
@@ -179,18 +184,18 @@ const initGroupByRef = (cur, expr, steps) => {
         };
     }
 
-    return groupLoopFn(cur, in_end, groups, onDoc);
+    return groupLoopFn(next, in_end, groups, onDoc);
 };
 
-const initGroup = (cur, expr, steps) => {
+const createGroupFn = (next, expr, steps) => {
     if (expr.has_refs) {
-        return initGroupByRef(cur, expr, steps);
+        return createGroupByRefFn(next, expr, steps);
     }
 
     const { in_start, in_iter, in_end } = steps;
     const groups = [];
 
-    const createGroupDoc = () => {
+    const initGroupDoc = () => {
         const group_doc = { _id: expr.ast.run() };
 
         runSteps(in_start, group_doc);
@@ -200,17 +205,17 @@ const initGroup = (cur, expr, steps) => {
     };
 
     if (in_iter.length) {
-        const add = memoize(() => createGroupDoc());
+        const add = memoize(() => initGroupDoc());
 
-        return groupLoopFn(cur, in_end, groups, (doc) => {
+        return groupLoopFn(next, in_end, groups, (doc) => {
             runSteps(in_iter, add(), doc);
         });
     }
 
     return (cb) => {
-        cur._next((error, doc) => {
+        next((error, doc) => {
             if (doc) {
-                createGroupDoc();
+                initGroupDoc();
 
                 runInEnd(in_end, groups);
             }
@@ -275,7 +280,7 @@ const _build = (steps, field, value) => {
     });
 };
 
-module.exports = (cur, spec) => {
+module.exports = (_next, spec) => {
     if (!spec.hasOwnProperty('_id')) {
         throw Error("the '_id' field is missing");
     }
@@ -295,7 +300,7 @@ module.exports = (cur, spec) => {
         _build(steps, field, new_spec[field]);
     }
 
-    const group = initGroup(cur, expr, steps);
+    const group = createGroupFn(_next, expr, steps);
 
     let next = (cb) => {
         group((error, groups) => {

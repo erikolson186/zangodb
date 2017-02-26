@@ -1,9 +1,6 @@
-const {
-    toPathPieces,
-    get
-} = require('./util.js');
+const { toPathPieces, get } = require('./util.js');
 
-module.exports = (cur, path) => {
+module.exports = (_next, path) => {
     const path_pieces = toPathPieces(path.substring(1)),
           elements = [],
           fn = cb => cb(null, elements.pop());
@@ -22,11 +19,15 @@ module.exports = (cur, path) => {
             }
         });
 
-        (old_length === elements.length ? next : fn)(cb);
+        if (old_length === elements.length) {
+            return next(cb);
+        }
+
+        fn(cb);
     };
 
     let next = (cb) => {
-        cur._next((error, doc) => {
+        _next((error, doc) => {
             if (error) { cb(error); }
             else if (doc) { onDoc(doc, cb); }
             else { (next = fn)(cb); }

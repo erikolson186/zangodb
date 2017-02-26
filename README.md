@@ -47,6 +47,13 @@ doc: { count: 1, age: 28 }
 ```html
 <script src="https://unpkg.com/zangodb@latest/dist/zangodb.min.js"></script>
 ```
+
+For certain web browsers, such as Internet Explorer, the Babel polyfill is required and must be loaded before ZangoDB:
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.23.0/polyfill.min.js"></script>
+```
+
 **ZangoDB** then can be accessed using the global variable `zango`.
 
 To install **ZangoDB** for usage with [node](https://nodejs.org/):

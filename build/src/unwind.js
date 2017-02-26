@@ -8,7 +8,7 @@ var toPathPieces = _require.toPathPieces;
 var get = _require.get;
 
 
-module.exports = function (cur, path) {
+module.exports = function (_next, path) {
     var path_pieces = toPathPieces(path.substring(1)),
         elements = [],
         fn = function fn(cb) {
@@ -52,22 +52,26 @@ module.exports = function (cur, path) {
             }
         });
 
-        (old_length === elements.length ? _next : fn)(cb);
+        if (old_length === elements.length) {
+            return _next2(cb);
+        }
+
+        fn(cb);
     };
 
-    var _next = function next(cb) {
-        cur._next(function (error, doc) {
+    var _next2 = function next(cb) {
+        _next(function (error, doc) {
             if (error) {
                 cb(error);
             } else if (doc) {
                 onDoc(doc, cb);
             } else {
-                (_next = fn)(cb);
+                (_next2 = fn)(cb);
             }
         });
     };
 
     return function (cb) {
-        return _next(cb);
+        return _next2(cb);
     };
 };

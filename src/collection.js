@@ -25,25 +25,6 @@ class Collection {
         return this._indexes.has(path) || path === '_id';
     }
 
-    _getIndexSize(path, cb) {
-        let count = 0;
-
-        this._db._getConn((error, idb) => {
-            if (error) { return cb(error); }
-
-            const trans = idb.transaction([this._name], 'readonly');
-
-            trans.oncomplete = () => cb(null, count);
-            trans.onerror = e => cb(getIDBError(e));
-
-            const store = trans.objectStore(this._name),
-                  index = store.index(path),
-                  req = index.count();
-
-            req.onsuccess = e => count = e.target.result;
-        });
-    }
-
     /**
      * Open a cursor and optionally filter documents and apply a projection.
      * @param {object} [expr] The query document to filter by.
