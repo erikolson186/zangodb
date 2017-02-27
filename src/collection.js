@@ -67,7 +67,9 @@ class Collection {
             const value = doc[field];
 
             if (Array.isArray(value)) {
-                for (let element of value) { this._validate(element); }
+                for (let element of value) {
+                    this._validate(element);
+                }
             } else if (typeof value === 'object') {
                 this._validate(value);
             }
@@ -97,14 +99,15 @@ class Collection {
         this._db._getConn((error, idb) => {
             let trans;
 
-            try {
-                trans = idb.transaction([this._name], 'readwrite');
-            } catch (error) { return deferred.reject(error); }
+            const name = this._name;
+
+            try { trans = idb.transaction([name], 'readwrite'); }
+            catch (error) { return deferred.reject(error); }
 
             trans.oncomplete = () => deferred.resolve();
             trans.onerror = e => deferred.reject(getIDBError(e));
 
-            const store = trans.objectStore(this._name);
+            const store = trans.objectStore(name);
 
             let i = 0;
 
