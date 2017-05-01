@@ -6,9 +6,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var memoize = require('memoizee');
 
-var _require = require('../util.js');
-
-var _get = _require.get;
+var _require = require('../util.js'),
+    _get = _require.get;
 
 var MISSING = require('./missing_symbol.js');
 

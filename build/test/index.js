@@ -20,6 +20,9 @@ describe('Collection', function () {
     describe('.find', function () {
         return require('./find.js');
     });
+    describe('.findOne', function () {
+        return require('./find_one.js');
+    });
     describe('.aggregate', function () {
         return require('./aggregate.js');
     });
