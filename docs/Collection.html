@@ -66,6 +66,8 @@
             
                 <li data-name="Collection#find"><a href="Collection.html#find">find</a></li>
             
+                <li data-name="Collection#findOne"><a href="Collection.html#findOne">findOne</a></li>
+            
                 <li data-name="Collection#insert"><a href="Collection.html#insert">insert</a></li>
             
                 <li data-name="Collection#remove"><a href="Collection.html#remove">remove</a></li>
@@ -334,7 +336,7 @@
     
         
         <div class="tag-source">
-            collection.js, line 59
+            collection.js, line 74
         </div>
         
     </div>
@@ -470,7 +472,11 @@
         
 
     
-    <pre class="prettyprint"><code>col.aggregate([    { $match: { x: { $lt: 8 } } },    { $group: { _id: '$x', array: { $push: '$y' } } },    { $unwind: '$array' }]);</code></pre>
+    <pre class="prettyprint"><code>col.aggregate([
+    { $match: { x: { $lt: 8 } } },
+    { $group: { _id: '$x', array: { $push: '$y' } } },
+    { $unwind: '$array' }
+]);</code></pre>
     
 
     
@@ -670,6 +676,196 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="findOne">
+            
+            findOne<span class="signature">(<span class="optional">expr</span>, <span class="optional">projection_spec</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Promise}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            collection.js, line 56
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns one document that satisfies the specified query criteria
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>expr</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The query document to filter by.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>projection_spec</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Specification for projection.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Promise
+                        
+                    
+            </td>
+            <td class="description last">resolves with first document matching the query</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>col.findOne({ x: 4, g: { $lt: 10 } }, { k: 0 });</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="insert">
             
             insert<span class="signature">(docs, <span class="optional">cb</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Promise}</span>
@@ -677,7 +873,7 @@
     
         
         <div class="tag-source">
-            collection.js, line 92
+            collection.js, line 109
         </div>
         
     </div>
@@ -847,12 +1043,16 @@
         
 
     
-    <pre class="prettyprint"><code>col.insert([{ x: 4 }, { k: 8 }], (error) => {    if (error) { throw error; }});</code></pre>
+    <pre class="prettyprint"><code>col.insert([{ x: 4 }, { k: 8 }], (error) => {
+    if (error) { throw error; }
+});</code></pre>
     
 
 
     
-    <pre class="prettyprint"><code>col.insert({ x: 4 }, (error) => {    if (error) { throw error; }});</code></pre>
+    <pre class="prettyprint"><code>col.insert({ x: 4 }, (error) => {
+    if (error) { throw error; }
+});</code></pre>
     
 
     
@@ -869,7 +1069,7 @@
     
         
         <div class="tag-source">
-            collection.js, line 183
+            collection.js, line 201
         </div>
         
     </div>
@@ -1040,7 +1240,9 @@
         
 
     
-    <pre class="prettyprint"><code>col.remove({ x: { $ne: 10 } }, (error) => {    if (error) { throw error; }});</code></pre>
+    <pre class="prettyprint"><code>col.remove({ x: { $ne: 10 } }, (error) => {
+    if (error) { throw error; }
+});</code></pre>
     
 
     
@@ -1057,7 +1259,7 @@
     
         
         <div class="tag-source">
-            collection.js, line 166
+            collection.js, line 184
         </div>
         
     </div>
@@ -1256,7 +1458,13 @@
         
 
     
-    <pre class="prettyprint"><code>col.update({    age: { $gte: 18 }}, {    adult: true}, (error) => {    if (error) { throw error; }});</code></pre>
+    <pre class="prettyprint"><code>col.update({
+    age: { $gte: 18 }
+}, {
+    adult: true
+}, (error) => {
+    if (error) { throw error; }
+});</code></pre>
     
 
     
@@ -1279,7 +1487,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sat Feb 25 2017 21:24:27 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Mon May 01 2017 12:20:41 GMT-0700 (PDT)
         </footer>
     </div>
 </div>
