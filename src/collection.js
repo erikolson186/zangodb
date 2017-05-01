@@ -45,6 +45,21 @@ class Collection {
     }
 
     /**
+     * Returns one document that satisfies the specified query criteria
+     * @param {object} [expr] The query document to filter by.
+     * @param {object} [projection_spec] Specification for projection.
+     * @return {Promise} resolves with first document matching the query
+     *
+     * @example
+     * col.findOne({ x: 4, g: { $lt: 10 } }, { k: 0 });
+     */
+    findOne(expr, projection_spec) {
+        const cur = this.find(expr, projection_spec).limit(1);
+        return cur.toArray().then((docs) => docs[0]);
+    }
+
+
+    /**
      * Evaluate an aggregation framework pipeline.
      * @param {object[]} pipeline The pipeline.
      * @return {Cursor}
