@@ -235,13 +235,12 @@ const addPipelineStages = ({ pipeline }, next) => {
 };
 
 const createParallelNextFn = (config) => {
-    const next_fns = [];
+    const next_fns = [], pred_args = config.pred.args;
 
-    for (let node of config.pred.args) {
         const new_config = {
             col: config.col,
             read_pref: config.read_pref,
-            pred: node,
+            pred: pred_args[i],
             pipeline: []
         };
 
