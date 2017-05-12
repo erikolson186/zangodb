@@ -26,7 +26,7 @@ class Collection {
     }
 
     /**
-     * Open a cursor and optionally filter documents and apply a projection.
+     * Open a cursor that satisfies the specified query criteria.
      * @param {object} [expr] The query document to filter by.
      * @param {object} [projection_spec] Specification for projection.
      * @return {Cursor}
@@ -42,6 +42,35 @@ class Collection {
         if (projection_spec) { cur.project(projection_spec); }
 
         return cur;
+    }
+
+    /**
+     * Retrieve one document that satisfies the specified query criteria.
+     * @param {object} [expr] The query document to filter by.
+     * @param {object} [projection_spec] Specification for projection.
+     * @param {function} [cb] The result callback.
+     * @return {Promise}
+     *
+     * @example
+     * col.findOne({ x: 4, g: { $lt: 10 } }, { k: 0 });
+     */
+    findOne(expr, projection_spec, cb) {
+        if (typeof projection_spec === 'function') {
+            cb = projection_spec;
+            projection_spec = null;
+        }
+
+        const deferred = Q.defer();
+        const cur = this.find(expr, projection_spec).limit(1);
+
+        cur.toArray((error, docs) => {
+            if (error) { deferred.reject(error); }
+            else { deferred.resolve(docs[0]); }
+        });
+
+        deferred.promise.nodeify(cb);
+
+        return deferred.promise;
     }
 
     /**
