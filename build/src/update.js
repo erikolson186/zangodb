@@ -1,16 +1,14 @@
 'use strict';
 
-var _require = require('./util.js');
-
-var toPathPieces = _require.toPathPieces;
-var get = _require.get;
-var set = _require.set;
-var modify = _require.modify;
-var remove1 = _require.remove1;
-var rename = _require.rename;
-var unknownOp = _require.unknownOp;
-var getIDBError = _require.getIDBError;
-
+var _require = require('./util.js'),
+    toPathPieces = _require.toPathPieces,
+    get = _require.get,
+    set = _require.set,
+    modify = _require.modify,
+    remove1 = _require.remove1,
+    rename = _require.rename,
+    unknownOp = _require.unknownOp,
+    getIDBError = _require.getIDBError;
 
 var $set = function $set(path_pieces, value) {
     return function (doc) {

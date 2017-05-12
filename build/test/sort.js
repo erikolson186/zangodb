@@ -1,9 +1,7 @@
 'use strict';
 
-var _require = require('chai');
-
-var expect = _require.expect;
-
+var _require = require('chai'),
+    expect = _require.expect;
 
 var db = new zango.Db(Math.random(), { col: ['x'] });
 var col = db.collection('col');

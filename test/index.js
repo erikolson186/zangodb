@@ -16,6 +16,7 @@ describe('lang', () => {
 
 describe('Collection', () => {
     describe('.find', () => require('./find.js'));
+    describe('.findOne', () => require('./find_one.js'));
     describe('.aggregate', () => require('./aggregate.js'));
 
     describe('Cursor', () => {

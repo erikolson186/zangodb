@@ -1,16 +1,12 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var _require = require('./util.js');
-
-var toPathPieces = _require.toPathPieces;
-var set = _require.set;
-var remove2 = _require.remove2;
-var copy = _require.copy;
-
+var _require = require('./util.js'),
+    toPathPieces = _require.toPathPieces,
+    set = _require.set,
+    remove2 = _require.remove2,
+    copy = _require.copy;
 
 var build = require('./lang/expression.js');
 var Fields = require('./lang/fields.js');
@@ -22,10 +18,9 @@ var addition = function addition(doc, new_doc, new_fields) {
 
     try {
         for (var _iterator = new_fields[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var _step$value = _slicedToArray(_step.value, 2);
-
-            var path_pieces = _step$value[0];
-            var add = _step$value[1];
+            var _step$value = _slicedToArray(_step.value, 2),
+                path_pieces = _step$value[0],
+                add = _step$value[1];
 
             add(doc, new_doc, path_pieces);
         }
@@ -48,29 +43,21 @@ var addition = function addition(doc, new_doc, new_fields) {
 };
 
 var _build = function _build(value1) {
-    var _build2 = build(value1);
-
-    var ast = _build2.ast;
-    var paths = _build2.paths;
-    var has_refs = _build2.has_refs;
-
+    var _build2 = build(value1),
+        ast = _build2.ast,
+        paths = _build2.paths,
+        has_refs = _build2.has_refs;
 
     if (!has_refs) {
-        var _ret = function () {
-            var value2 = ast.run();
+        var value2 = ast.run();
 
-            return {
-                v: function v(doc) {
-                    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                        args[_key - 1] = arguments[_key];
-                    }
+        return function (doc) {
+            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                args[_key - 1] = arguments[_key];
+            }
 
-                    return set.apply(undefined, args.concat([value2]));
-                }
-            };
-        }();
-
-        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+            return set.apply(undefined, args.concat([value2]));
+        };
     }
 
     return function (doc) {
@@ -135,39 +122,35 @@ var project = function project(_next, spec) {
     }
 
     if (!existing_fields.length) {
-        (function () {
-            var project = void 0;
+        var _project = void 0;
 
-            if (_id_bool) {
-                project = function project(doc, new_doc) {
-                    if (doc.hasOwnProperty('_id')) {
-                        new_doc._id = doc._id;
-                    }
-                };
-            } else {
-                project = function project(doc, new_doc) {
-                    delete new_doc._id;
-                };
-            }
+        if (_id_bool) {
+            _project = function _project(doc, new_doc) {
+                if (doc.hasOwnProperty('_id')) {
+                    new_doc._id = doc._id;
+                }
+            };
+        } else {
+            _project = function _project(doc, new_doc) {
+                delete new_doc._id;
+            };
+        }
 
-            steps.push(function (doc, new_doc) {
-                project(doc, new_doc);
+        steps.push(function (doc, new_doc) {
+            _project(doc, new_doc);
 
-                return new_doc;
-            });
-        })();
+            return new_doc;
+        });
     } else {
-        (function () {
-            if (is_inclusion === _id_bool) {
-                existing_fields.push(['_id']);
-            }
+        if (is_inclusion === _id_bool) {
+            existing_fields.push(['_id']);
+        }
 
-            var project = is_inclusion ? copy : remove2;
+        var _project2 = is_inclusion ? copy : remove2;
 
-            steps.push(function (doc) {
-                return project(doc, existing_fields);
-            });
-        })();
+        steps.push(function (doc) {
+            return _project2(doc, existing_fields);
+        });
     }
 
     var next = function next(cb) {

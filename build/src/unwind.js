@@ -2,11 +2,9 @@
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var _require = require('./util.js');
-
-var toPathPieces = _require.toPathPieces;
-var get = _require.get;
-
+var _require = require('./util.js'),
+    toPathPieces = _require.toPathPieces,
+    get = _require.get;
 
 module.exports = function (_next, path) {
     var path_pieces = toPathPieces(path.substring(1)),

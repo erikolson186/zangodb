@@ -1,24 +1,20 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var merge = require('deepmerge');
 
-var _require = require('./util.js');
+var _require = require('./util.js'),
+    hashify = _require.hashify,
+    getIDBError = _require.getIDBError,
+    filter = require('./filter.js'),
+    sort = require('./sort.js');
 
-var hashify = _require.hashify;
-var getIDBError = _require.getIDBError;
-var filter = require('./filter.js');
-var sort = require('./sort.js');
-var _require2 = require('./lang/filter.js');
-
-var build = _require2.build;
-var Conjunction = _require2.Conjunction;
-var Disjunction = _require2.Disjunction;
-var Exists = _require2.Exists;
-
+var _require2 = require('./lang/filter.js'),
+    build = _require2.build,
+    Conjunction = _require2.Conjunction,
+    Disjunction = _require2.Disjunction,
+    Exists = _require2.Exists;
 
 var toIDBDirection = function toIDBDirection(value) {
     return value > 0 ? 'next' : 'prev';
@@ -33,15 +29,15 @@ var joinPredicates = function joinPredicates(preds) {
 };
 
 var removeClause = function removeClause(_ref) {
-    var parent = _ref.parent;
-    var index = _ref.index;
+    var parent = _ref.parent,
+        index = _ref.index;
 
     parent.args.splice(index, 1);
 };
 
 var openConn = function openConn(_ref2, cb) {
-    var col = _ref2.col;
-    var read_pref = _ref2.read_pref;
+    var col = _ref2.col,
+        read_pref = _ref2.read_pref;
 
     col._db._getConn(function (error, idb) {
         if (error) {
@@ -64,9 +60,9 @@ var openConn = function openConn(_ref2, cb) {
 };
 
 var getIDBReqWithIndex = function getIDBReqWithIndex(store, clause) {
-    var key_range = clause.idb_key_range || null;
-    var direction = clause.idb_direction || 'next';
-    var literal = clause.path.literal;
+    var key_range = clause.idb_key_range || null,
+        direction = clause.idb_direction || 'next',
+        literal = clause.path.literal;
 
 
     var index = void 0;
@@ -93,10 +89,9 @@ var buildPredicates = function buildPredicates(pipeline) {
 
     try {
         for (var _iterator = pipeline[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var _step$value = _slicedToArray(_step.value, 2);
-
-            var fn = _step$value[0];
-            var arg = _step$value[1];
+            var _step$value = _slicedToArray(_step.value, 2),
+                fn = _step$value[0],
+                arg = _step$value[1];
 
             if (fn === filter) {
                 var pred = build(arg);
@@ -132,9 +127,10 @@ var buildPredicates = function buildPredicates(pipeline) {
 };
 
 var initPredAndSortSpec = function initPredAndSortSpec(config) {
-    var pipeline = config.pipeline;
-    var preds = [];
-    var sort_specs = [];
+    var pipeline = config.pipeline,
+        preds = [],
+        sort_specs = [];
+
 
     var i = 0;
 
@@ -144,10 +140,9 @@ var initPredAndSortSpec = function initPredAndSortSpec(config) {
 
     try {
         for (var _iterator2 = pipeline[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var _step2$value = _slicedToArray(_step2.value, 2);
-
-            var fn = _step2$value[0];
-            var arg = _step2$value[1];
+            var _step2$value = _slicedToArray(_step2.value, 2),
+                fn = _step2$value[0],
+                arg = _step2$value[1];
 
             if (fn === sort) {
                 sort_specs.push(arg);
@@ -230,8 +225,8 @@ var getClauses = function getClauses(col, pred) {
 };
 
 var initClauses = function initClauses(config) {
-    var col = config.col;
-    var pred = config.pred;
+    var col = config.col,
+        pred = config.pred;
 
 
     config.clauses = getClauses(col, pred);
@@ -242,8 +237,8 @@ var initHint = function initHint(config) {
         return;
     }
 
-    var clauses = config.clauses;
-    var hint = config.hint;
+    var clauses = config.clauses,
+        hint = config.hint;
 
 
     var new_clauses = [];
@@ -287,9 +282,9 @@ var initSort = function initSort(config) {
         return;
     }
 
-    var clauses = config.clauses;
-    var spec = config.sort_spec;
-    var pipeline = config.pipeline;
+    var clauses = config.clauses,
+        spec = config.sort_spec,
+        pipeline = config.pipeline;
 
     var new_clauses = [];
 
@@ -334,30 +329,24 @@ var initSort = function initSort(config) {
 };
 
 var createGetIDBReqFn = function createGetIDBReqFn(_ref3) {
-    var pred = _ref3.pred;
-    var clauses = _ref3.clauses;
-    var pipeline = _ref3.pipeline;
+    var pred = _ref3.pred,
+        clauses = _ref3.clauses,
+        pipeline = _ref3.pipeline;
 
     var getIDBReq = void 0;
 
     if (clauses.length) {
-        var _ret = function () {
-            var clause = clauses[0];
+        var clause = clauses[0];
 
-            getIDBReq = function getIDBReq(store) {
-                return getIDBReqWithIndex(store, clause);
-            };
+        getIDBReq = function getIDBReq(store) {
+            return getIDBReqWithIndex(store, clause);
+        };
 
-            if (!pred || clause === pred) {
-                return {
-                    v: getIDBReq
-                };
-            }
+        if (!pred || clause === pred) {
+            return getIDBReq;
+        }
 
-            removeClause(clause);
-        }();
-
-        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+        removeClause(clause);
     } else {
         getIDBReq = getIDBReqWithoutIndex;
 
@@ -427,10 +416,9 @@ var addPipelineStages = function addPipelineStages(_ref4, next) {
 
     try {
         for (var _iterator6 = pipeline[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var _step6$value = _slicedToArray(_step6.value, 2);
-
-            var fn = _step6$value[0];
-            var arg = _step6$value[1];
+            var _step6$value = _slicedToArray(_step6.value, 2),
+                fn = _step6$value[0],
+                arg = _step6$value[1];
 
             next = fn(next, arg);
         }
@@ -502,7 +490,7 @@ var createParallelNextFn = function createParallelNextFn(config) {
     };
 
     var getNextFn = function getNextFn() {
-        return next_fns.pop();
+        return next_fns.shift();
     };
 
     var currentNextFn = getNextFn();

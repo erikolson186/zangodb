@@ -1,20 +1,17 @@
 'use strict';
 
-var _require = require('chai');
-
-var expect = _require.expect;
-
+var _require = require('chai'),
+    expect = _require.expect;
 
 var build = require('../../src/lang/expression.js');
 var Fields = require('../../src/lang/fields.js');
 
 var evalExpr = function evalExpr(expr) {
-    var doc = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+    var doc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    var _build = build(expr);
-
-    var ast = _build.ast;
-    var has_refs = _build.has_refs;
+    var _build = build(expr),
+        ast = _build.ast,
+        has_refs = _build.has_refs;
 
     if (ast === false) {
         return false;

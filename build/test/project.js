@@ -1,9 +1,7 @@
 'use strict';
 
-var _require = require('chai');
-
-var expect = _require.expect;
-
+var _require = require('chai'),
+    expect = _require.expect;
 
 var waterfall = require('./waterfall.js');
 

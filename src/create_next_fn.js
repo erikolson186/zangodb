@@ -262,7 +262,7 @@ const createParallelNextFn = (config) => {
         }
     };
 
-    const getNextFn = () => next_fns.pop();
+    const getNextFn = () => next_fns.shift();
 
     let currentNextFn = getNextFn();
 

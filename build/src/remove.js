@@ -1,9 +1,7 @@
 'use strict';
 
-var _require = require('./util.js');
-
-var getIDBError = _require.getIDBError;
-
+var _require = require('./util.js'),
+    getIDBError = _require.getIDBError;
 
 module.exports = function (cur, cb) {
     (function iterate() {
