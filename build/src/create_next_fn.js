@@ -453,42 +453,22 @@ var addPipelineStages = function addPipelineStages(_ref4, next) {
 };
 
 var createParallelNextFn = function createParallelNextFn(config) {
-    var next_fns = [];
+    var next_fns = [],
+        pred_args = config.pred.args;
 
-    var _iteratorNormalCompletion7 = true;
-    var _didIteratorError7 = false;
-    var _iteratorError7 = undefined;
+    for (var i = pred_args.length - 1; i >= 0; i--) {
+        var new_config = {
+            col: config.col,
+            read_pref: config.read_pref,
+            pred: pred_args[i],
+            pipeline: []
+        };
 
-    try {
-        for (var _iterator7 = config.pred.args[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-            var node = _step7.value;
+        initClauses(new_config);
 
-            var new_config = {
-                col: config.col,
-                read_pref: config.read_pref,
-                pred: node,
-                pipeline: []
-            };
+        var _next = createNextFn(new_config);
 
-            initClauses(new_config);
-
-            var _next = createNextFn(new_config);
-
-            next_fns.push(addPipelineStages(new_config, _next));
-        }
-    } catch (err) {
-        _didIteratorError7 = true;
-        _iteratorError7 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                _iterator7.return();
-            }
-        } finally {
-            if (_didIteratorError7) {
-                throw _iteratorError7;
-            }
-        }
+        next_fns.push(addPipelineStages(new_config, _next));
     }
 
     var _id_hashes = new Set();

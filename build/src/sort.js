@@ -68,7 +68,7 @@ module.exports = function (_next, spec) {
 
                 var result = compare(a, b, path_pieces, order);
 
-                if (result !== null) {
+                if (result > 0 || result < 0) {
                     return result;
                 }
             }

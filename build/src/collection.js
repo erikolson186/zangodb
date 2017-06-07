@@ -41,7 +41,7 @@ var Collection = function () {
         }
 
         /**
-         * Open a cursor and optionally filter documents and apply a projection.
+         * Open a cursor that satisfies the specified query criteria.
          * @param {object} [expr] The query document to filter by.
          * @param {object} [projection_spec] Specification for projection.
          * @return {Cursor}
@@ -62,6 +62,41 @@ var Collection = function () {
             }
 
             return cur;
+        }
+
+        /**
+         * Retrieve one document that satisfies the specified query criteria.
+         * @param {object} [expr] The query document to filter by.
+         * @param {object} [projection_spec] Specification for projection.
+         * @param {function} [cb] The result callback.
+         * @return {Promise}
+         *
+         * @example
+         * col.findOne({ x: 4, g: { $lt: 10 } }, { k: 0 });
+         */
+
+    }, {
+        key: 'findOne',
+        value: function findOne(expr, projection_spec, cb) {
+            if (typeof projection_spec === 'function') {
+                cb = projection_spec;
+                projection_spec = null;
+            }
+
+            var deferred = Q.defer();
+            var cur = this.find(expr, projection_spec).limit(1);
+
+            cur.toArray(function (error, docs) {
+                if (error) {
+                    deferred.reject(error);
+                } else {
+                    deferred.resolve(docs[0]);
+                }
+            });
+
+            deferred.promise.nodeify(cb);
+
+            return deferred.promise;
         }
 
         /**
@@ -100,6 +135,7 @@ var Collection = function () {
                     try {
                         for (var _iterator = value[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                             var element = _step.value;
+
                             this._validate(element);
                         }
                     } catch (err) {
@@ -152,8 +188,10 @@ var Collection = function () {
             this._db._getConn(function (error, idb) {
                 var trans = void 0;
 
+                var name = _this._name;
+
                 try {
-                    trans = idb.transaction([_this._name], 'readwrite');
+                    trans = idb.transaction([name], 'readwrite');
                 } catch (error) {
                     return deferred.reject(error);
                 }
@@ -165,7 +203,7 @@ var Collection = function () {
                     return deferred.reject(getIDBError(e));
                 };
 
-                var store = trans.objectStore(_this._name);
+                var store = trans.objectStore(name);
 
                 var i = 0;
 

@@ -66,6 +66,8 @@
             
                 <li data-name="Collection#find"><a href="Collection.html#find">find</a></li>
             
+                <li data-name="Collection#findOne"><a href="Collection.html#findOne">findOne</a></li>
+            
                 <li data-name="Collection#insert"><a href="Collection.html#insert">insert</a></li>
             
                 <li data-name="Collection#remove"><a href="Collection.html#remove">remove</a></li>
@@ -334,7 +336,7 @@
     
         
         <div class="tag-source">
-            collection.js, line 59
+            collection.js, line 88
         </div>
         
     </div>
@@ -498,7 +500,7 @@
     
     
     <div class="description">
-        Open a cursor and optionally filter documents and apply a projection.
+        Open a cursor that satisfies the specified query criteria.
     </div>
     
 
@@ -670,6 +672,226 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="findOne">
+            
+            findOne<span class="signature">(<span class="optional">expr</span>, <span class="optional">projection_spec</span>, <span class="optional">cb</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Promise}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            collection.js, line 57
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Retrieve one document that satisfies the specified query criteria.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>expr</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The query document to filter by.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>projection_spec</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Specification for projection.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>cb</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The result callback.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Promise
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>col.findOne({ x: 4, g: { $lt: 10 } }, { k: 0 });</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="insert">
             
             insert<span class="signature">(docs, <span class="optional">cb</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Promise}</span>
@@ -677,7 +899,7 @@
     
         
         <div class="tag-source">
-            collection.js, line 92
+            collection.js, line 123
         </div>
         
     </div>
@@ -869,7 +1091,7 @@
     
         
         <div class="tag-source">
-            collection.js, line 183
+            collection.js, line 215
         </div>
         
     </div>
@@ -1057,7 +1279,7 @@
     
         
         <div class="tag-source">
-            collection.js, line 166
+            collection.js, line 198
         </div>
         
     </div>
@@ -1279,7 +1501,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sat Feb 25 2017 21:24:27 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Wed Jun 07 2017 06:05:46 GMT-0400 (Eastern Daylight Time)
         </footer>
     </div>
 </div>
