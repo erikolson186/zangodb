@@ -62,13 +62,7 @@ To install **ZangoDB** for usage with [node](https://nodejs.org/):
 $ npm install zangodb
 ```
 
-To install **ZangoDB** using [Bower](https://bower.io/):
-
-```
-$ bower install zangodb
-```
-
-In each case, an implementation of IndexedDB is required. For environments without a native implementation of IndexedDB, [Fake IndexedDB](https://github.com/dumbmatter/fakeIndexedDB) can be used:
+In both cases, an implementation of IndexedDB is required. For environments without a native implementation of IndexedDB, [Fake IndexedDB](https://github.com/dumbmatter/fakeIndexedDB) can be used:
 
 ```javascript
 global.indexedDB = require('fake-indexeddb');
