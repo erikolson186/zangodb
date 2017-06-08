@@ -1,6 +1,6 @@
 const Fields = require('./lang/fields.js');
 
-module.exports = (next, pred) => (cb) => {
+module.exports = (next, pred) => cb => {
     (function iterate() {
         next((error, doc, idb_cur) => {
             if (!doc) { cb(error); }

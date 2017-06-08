@@ -134,8 +134,8 @@ const runInEnd = (in_end, groups) => {
     }
 };
 
-const groupLoopFn = (next, in_end, groups, fn) => (cb) => {
-    const done = (error) => {
+const groupLoopFn = (next, in_end, groups, fn) => cb => {
+    const done = error => {
         if (!error) { runInEnd(in_end, groups); }
 
         cb(error, groups);
@@ -170,14 +170,14 @@ const createGroupByRefFn = (next, expr, steps) => {
     let onDoc;
 
     if (in_iter.length) {
-        onDoc = (doc) => {
+        onDoc = doc => {
             const _id = _idFn(doc);
             const group_doc = add(hashify(_id), _id);
 
             runSteps(in_iter, group_doc, doc);
         };
     } else {
-        onDoc = (doc) => {
+        onDoc = doc => {
             const _id = _idFn(doc);
 
             add(hashify(_id), _id);
@@ -212,7 +212,7 @@ const createGroupFn = (next, expr, steps) => {
         });
     }
 
-    return (cb) => {
+    return cb => {
         next((error, doc) => {
             if (doc) {
                 initGroupDoc();
@@ -302,7 +302,7 @@ module.exports = (_next, spec) => {
 
     const group = createGroupFn(_next, expr, steps);
 
-    let next = (cb) => {
+    let next = cb => {
         group((error, groups) => {
             if (error) { cb(error); }
             else { (next = cb => cb(null, groups.pop()))(cb); }

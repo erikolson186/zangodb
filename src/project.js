@@ -16,7 +16,7 @@ const addition = (doc, new_doc, new_fields) => {
     return new_doc;
 };
 
-const _build = (value1) => {
+const _build = value1 => {
     const { ast, paths, has_refs } = build(value1);
 
     if (!has_refs) {
@@ -47,13 +47,13 @@ const project = (_next, spec) => {
     const existing_fields = [], new_fields = [];
     let is_inclusion = true;
 
-    const _mode = (path) => {
+    const _mode = path => {
         if (toBool(path) !== is_inclusion) {
             throw Error('cannot mix inclusions and exclusions');
         }
     };
 
-    let mode = (path) => {
+    let mode = path => {
         is_inclusion = toBool(path);
 
         mode = _mode;
@@ -111,7 +111,7 @@ const project = (_next, spec) => {
         steps.push(doc => project(doc, existing_fields));
     }
 
-    const next = (cb) => {
+    const next = cb => {
         _next((error, doc) => {
             if (!doc) { return cb(error); }
 
