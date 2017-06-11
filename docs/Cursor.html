@@ -101,6 +101,8 @@
             
                 <li data-name="Cursor#group"><a href="Cursor.html#group">group</a></li>
             
+                <li data-name="Cursor#hint"><a href="Cursor.html#hint">hint</a></li>
+            
                 <li data-name="Cursor#limit"><a href="Cursor.html#limit">limit</a></li>
             
                 <li data-name="Cursor#project"><a href="Cursor.html#project">project</a></li>
@@ -287,7 +289,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 150
+            cursor.js, line 160
         </div>
         
     </div>
@@ -630,7 +632,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 194
+            cursor.js, line 204
         </div>
         
     </div>
@@ -776,6 +778,159 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="hint">
+            
+            hint<span class="signature">(path)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="Cursor.html">Cursor</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            cursor.js, line 133
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Suggest an index to use.<strong>Note:</strong> When an index hint is used only documentsthat contain the indexed path will be in the results.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                An indexed path to use.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="Cursor.html">Cursor</a>
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>col.find().hint('myindex');</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="limit">
             
             limit<span class="signature">(num)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="Cursor.html">Cursor</a>}</span>
@@ -783,7 +938,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 160
+            cursor.js, line 170
         </div>
         
     </div>
@@ -936,7 +1091,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 180
+            cursor.js, line 190
         </div>
         
     </div>
@@ -1089,7 +1244,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 170
+            cursor.js, line 180
         </div>
         
     </div>
@@ -1242,7 +1397,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 228
+            cursor.js, line 238
         </div>
         
     </div>
@@ -1253,7 +1408,7 @@
     
     
     <div class="description">
-        Sort documents.<strong>Note:</strong> An index will not be used for sortingunless the query predicate references one of the fields tosort by or Cursor#hint is used. This is so as not to excludedocuments that do not contain the indexed field, in accordancewith the functionality of MongoDB.
+        Sort documents.<strong>Note:</strong> An index will not be used for sortingunless the query predicate references one of the fields tosort by or <a href="Cursor.html#hint">Cursor#hint</a> is used. This is so as not to excludedocuments that do not contain the indexed field, in accordancewith the functionality of MongoDB.
     </div>
     
 
@@ -1565,7 +1720,7 @@
     
         
         <div class="tag-source">
-            cursor.js, line 204
+            cursor.js, line 214
         </div>
         
     </div>
@@ -1880,7 +2035,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Wed Jun 07 2017 06:05:46 GMT-0400 (Eastern Daylight Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sun Jun 11 2017 10:30:26 GMT-0400 (Eastern Daylight Time)
         </footer>
     </div>
 </div>

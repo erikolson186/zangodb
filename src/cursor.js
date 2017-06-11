@@ -120,6 +120,16 @@ class Cursor extends EventEmitter {
         }
     }
 
+    /**
+     * Suggest an index to use.
+     * <strong>Note:</strong> When an index hint is used only documents
+     * that contain the indexed path will be in the results.
+     * @param {string} path An indexed path to use.
+     * @return {Cursor}
+     *
+     * @example
+     * col.find().hint('myindex');
+     */
     hint(path) {
         this._assertUnopened();
 
