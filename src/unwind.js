@@ -26,7 +26,7 @@ module.exports = (_next, path) => {
         fn(cb);
     };
 
-    let next = (cb) => {
+    let next = cb => {
         _next((error, doc) => {
             if (error) { cb(error); }
             else if (doc) { onDoc(doc, cb); }

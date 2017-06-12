@@ -55,7 +55,7 @@ module.exports = (_next, spec) => {
 
     const fn = cb => cb(null, docs.pop());
 
-    let next = (cb) => {
+    let next = cb => {
         const done = (error) => {
             if (error) { return cb(error); }
 

@@ -13,7 +13,7 @@ const {
 
 const toIDBDirection = value => value > 0 ? 'next' : 'prev';
 
-const joinPredicates = (preds) => {
+const joinPredicates = preds => {
     if (preds.length > 1) {
         return new Conjunction(preds);
     }
@@ -55,7 +55,7 @@ const getIDBReqWithIndex = (store, clause) => {
 
 const getIDBReqWithoutIndex = store => store.openCursor();
 
-const buildPredicates = (pipeline) => {
+const buildPredicates = pipeline => {
     const new_pipeline = [];
 
     for (let [fn, arg] of pipeline) {
@@ -74,7 +74,7 @@ const buildPredicates = (pipeline) => {
     return new_pipeline;
 };
 
-const initPredAndSortSpec = (config) => {
+const initPredAndSortSpec = config => {
     const { pipeline } = config,
           preds = [],
           sort_specs = [];
@@ -116,13 +116,13 @@ const getClauses = (col, pred) => {
     return exists_clauses;
 };
 
-const initClauses = (config) => {
+const initClauses = config => {
     const { col, pred } = config;
 
     config.clauses = getClauses(col, pred);
 };
 
-const initHint = (config) => {
+const initHint = config => {
     if (!config.hint) { return; }
 
     const { clauses, hint } = config;
@@ -142,7 +142,7 @@ const initHint = (config) => {
     config.clauses = new_clauses;
 };
 
-const initSort = (config) => {
+const initSort = config => {
     if (!config.sort_spec) { return; }
 
     const { clauses, sort_spec: spec, pipeline } = config;
@@ -189,13 +189,13 @@ const createGetIDBReqFn = ({ pred, clauses, pipeline }) => {
     return getIDBReq;
 };
 
-const createGetIDBCurFn = (config) => {
+const createGetIDBCurFn = config => {
     let idb_cur, idb_req;
 
     const getIDBReq = createGetIDBReqFn(config);
 
-    const onIDBCur = (cb) => {
-        idb_req.onsuccess = (e) => {
+    const onIDBCur = cb => {
+        idb_req.onsuccess = e => {
             idb_cur = e.target.result;
 
             cb();
@@ -204,18 +204,18 @@ const createGetIDBCurFn = (config) => {
         idb_req.onerror = e => cb(getIDBError(e));
     };
 
-    const progressCur = (cb) => {
+    const progressCur = cb => {
         onIDBCur(cb);
         idb_cur.continue();
     };
 
-    let getCur = (cb) => {
+    let getCur = cb => {
         openConn(config, (error, store) => {
             if (error) { return cb(error); }
 
             idb_req = getIDBReq(store);
 
-            onIDBCur((error) => {
+            onIDBCur(error => {
                 if (idb_cur) { getCur = progressCur; }
 
                 cb(error);
@@ -234,7 +234,7 @@ const addPipelineStages = ({ pipeline }, next) => {
     return next;
 };
 
-const createParallelNextFn = (config) => {
+const createParallelNextFn = config => {
     const next_fns = [], pred_args = config.pred.args;
 
     for (let i = pred_args.length - 1; i >= 0; i--) {
@@ -254,7 +254,7 @@ const createParallelNextFn = (config) => {
 
     const _id_hashes = new Set();
 
-    const onDoc = (doc) => {
+    const onDoc = doc => {
         const _id_hash = hashify(doc._id);
 
         if (!_id_hashes.has(_id_hash)) {
@@ -266,12 +266,12 @@ const createParallelNextFn = (config) => {
 
     let currentNextFn = getNextFn();
 
-    const changeNextFn = (cb) => {
+    const changeNextFn = cb => {
         if (currentNextFn = getNextFn()) { next(cb); }
         else { cb(); }
     };
 
-    const next = (cb) => {
+    const next = cb => {
         currentNextFn((error, doc, idb_cur) => {
             if (error) { cb(error); }
             else if (!doc) { changeNextFn(cb); }
@@ -287,10 +287,10 @@ const createParallelNextFn = (config) => {
     return next;
 };
 
-const createNextFn = (config) => {
+const createNextFn = config => {
     const getIDBCur = createGetIDBCurFn(config);
 
-    const next = (cb) => {
+    const next = cb => {
         getIDBCur((error, idb_cur) => {
             if (!idb_cur) { cb(error); }
             else { cb(null, idb_cur.value, idb_cur); }
@@ -300,7 +300,7 @@ const createNextFn = (config) => {
     return next;
 };
 
-module.exports = (cur) => {
+module.exports = cur => {
     let pipeline;
 
     try { pipeline = buildPredicates(cur._pipeline); }

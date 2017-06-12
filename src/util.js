@@ -45,7 +45,7 @@ const set = (obj, path_pieces, value) => {
     modify(obj, path_pieces, fn, fn);
 };
 
-const isObject = (obj) => {
+const isObject = obj => {
     return typeof obj === 'object' && obj !== null;
 };
 
@@ -53,7 +53,7 @@ const isObject = (obj) => {
 const modify = (obj, path_pieces, update, init) => {
     const last = path_pieces[path_pieces.length - 1];
 
-    const _create = (i) => {
+    const _create = i => {
         obj = create(obj, path_pieces, i);
 
         init(obj, last);
@@ -101,7 +101,7 @@ const remove1 = (obj, path_pieces) => {
 };
 
 const _remove2 = (obj, new_obj, paths) => {
-    const fn = (field) => {
+    const fn = field => {
         const new_paths = [];
 
         for (let path_pieces of paths) {
@@ -180,11 +180,11 @@ const equal = (value1, value2) => {
     return hashify(value1) === hashify(value2);
 };
 
-const unknownOp = (name) => {
+const unknownOp = name => {
     throw Error(`unknown operator '${name}'`);
 };
 
-const hashify = (value) => {
+const hashify = value => {
     if (value === undefined) { return; }
 
     return objectHash(value);

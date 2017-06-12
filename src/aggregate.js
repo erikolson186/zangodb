@@ -11,7 +11,7 @@ const ops = {
     $limit: (cur, num) => cur.limit(num)
 };
 
-const getStageObject = (doc) => {
+const getStageObject = doc => {
     const op_keys = Object.keys(doc);
 
     if (op_keys.length > 1) {

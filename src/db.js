@@ -154,7 +154,7 @@ class Db extends EventEmitter {
 
         req.onerror = e => cb(getIDBError(e));
 
-        req.onupgradeneeded = (e) => {
+        req.onupgradeneeded = e => {
             const idb = e.target.result;
 
             for (let name in this._config) {
@@ -199,7 +199,7 @@ class Db extends EventEmitter {
     open(cb) {
         const deferred = Q.defer();
 
-        this._getConn((error) => {
+        this._getConn(error => {
             if (error) { deferred.reject(error); }
             else { deferred.resolve(this); }
         });

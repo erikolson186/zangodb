@@ -15,7 +15,7 @@ const $set = (path_pieces, value) => (doc) => {
 
 const $unset = path_pieces => doc => remove1(doc, path_pieces);
 
-const $rename = (path_pieces, new_name) => (doc) => {
+const $rename = (path_pieces, new_name) => doc => {
     rename(doc, path_pieces, new_name);
 };
 
@@ -40,7 +40,7 @@ const arithOp = (fn) => (path_pieces, value1) => {
 const $inc = arithOp((a, b) => a + b);
 const $mul = arithOp((a, b) => a * b);
 
-const compareOp = (fn) => (path_pieces, value) => {
+const compareOp = fn => (path_pieces, value) => {
     const update = (obj, field) => {
         if (fn(value, obj[field])) { obj[field] = value; }
     };
@@ -76,7 +76,7 @@ const $pop = (path_pieces, direction) => {
         pop = e => e.pop();
     }
 
-    return (doc) => {
+    return doc => {
         get(doc, path_pieces, (obj, field) => {
             const elements = obj[field];
 
