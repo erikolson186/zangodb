@@ -75,36 +75,6 @@ const buildPredicates = (pipeline) => {
     return new_pipeline;
 };
 
-const initPredAndSortSpec = (config) => {
-    const { pipeline } = config,
-          preds = [],
-          sort_specs = [],
-          limits = [];
-
-    let i = 0;
-
-    for (let [fn, arg] of pipeline) {
-        if (fn === sort) { sort_specs.push(arg); }
-        else if (fn === filter) { preds.push(arg); }
-        else if (fn === limit) { limits.push(arg); }
-        else { break; }
-
-        i++;
-    }
-
-    pipeline.splice(0, i);
-
-    config.pred = joinPredicates(preds);
-    
-    if (sort_specs.length) {
-        config.sort_spec = sort_specs.reduce(merge, {});
-    }
-
-    if (limits.length) {
-        config.limit_num = limits.reduce((a, b) => a + b);
-    }
-};
-
 const getClauses = (col, pred) => {
     if (!pred) { return []; }
 
@@ -173,11 +143,11 @@ const initSort = (config) => {
 };
 
 const initLimit = (config) => {
-    if (config.limit_num === undefined) { return; }
-
     const { limit_num, pipeline } = config;
-    
-    pipeline.push([limit, limit_num]);
+
+    if (config.hasOwnProperty('limit_num')) {
+        pipeline.push([limit, limit_num]);
+    }
 };
 
 const createGetIDBReqFn = ({ pred, clauses, pipeline }) => {
@@ -330,7 +300,32 @@ module.exports = (cur) => {
         pipeline
     };
 
-    initPredAndSortSpec(config);
+    const preds = [],
+          sort_specs = [],
+          limits = [];
+
+    let i = 0;
+
+    for (let [fn, arg] of pipeline) {
+        if (fn === sort) { sort_specs.push(arg); }
+        else if (fn === filter) { preds.push(arg); }
+        else if (fn === limit) { limits.push(arg); }
+        else { break; }
+
+        i++;
+    }
+
+    pipeline.splice(0, i);
+
+    config.pred = joinPredicates(preds);
+
+    if (sort_specs.length) {
+        config.sort_spec = sort_specs.reduce(merge, {});
+    }
+
+    if (limits.length) {
+        config.limit_num = limits.reduce((a, b) => a + b);
+    }
 
     let next;
 
