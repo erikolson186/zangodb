@@ -138,7 +138,7 @@ const initSort = (config) => {
     if (new_clauses.length) {
         config.clauses = new_clauses;
     } else {
-        pipeline.push([sort, spec]);
+        pipeline.unshift([sort, spec]);
     }
 };
 
@@ -267,7 +267,7 @@ const createParallelNextFn = (config) => {
     };
 
     const spec = config.sort_spec;
-    if (spec) { config.pipeline.push([sort, spec]); }
+    if (spec) { config.pipeline.unshift([sort, spec]); }
 
     return next;
 };
@@ -339,6 +339,6 @@ module.exports = (cur) => {
 
         next = createNextFn(config);
     }
-
+    
     return addPipelineStages(config, next);
 };
