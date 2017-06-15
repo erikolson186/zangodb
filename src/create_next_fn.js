@@ -2,7 +2,8 @@ const merge = require('deepmerge');
 
 const { hashify, getIDBError } = require('./util.js'),
       filter = require('./filter.js'),
-      sort = require('./sort.js');
+      sort = require('./sort.js'),
+      limit = require('./limit.js');
 
 const {
     build,
@@ -77,13 +78,15 @@ const buildPredicates = (pipeline) => {
 const initPredAndSortSpec = (config) => {
     const { pipeline } = config,
           preds = [],
-          sort_specs = [];
+          sort_specs = [],
+          limits = [];
 
     let i = 0;
 
     for (let [fn, arg] of pipeline) {
         if (fn === sort) { sort_specs.push(arg); }
         else if (fn === filter) { preds.push(arg); }
+        else if (fn === limit) { limits.push(arg); }
         else { break; }
 
         i++;
@@ -92,9 +95,13 @@ const initPredAndSortSpec = (config) => {
     pipeline.splice(0, i);
 
     config.pred = joinPredicates(preds);
-
+    
     if (sort_specs.length) {
         config.sort_spec = sort_specs.reduce(merge, {});
+    }
+
+    if (limits.length) {
+        config.limit_num = limits.reduce((a, b) => a + b);
     }
 };
 
@@ -163,6 +170,14 @@ const initSort = (config) => {
     } else {
         pipeline.push([sort, spec]);
     }
+};
+
+const initLimit = (config) => {
+    if (config.limit_num === undefined) { return; }
+
+    const { limit_num, pipeline } = config;
+    
+    pipeline.push([limit, limit_num]);
 };
 
 const createGetIDBReqFn = ({ pred, clauses, pipeline }) => {
@@ -325,6 +340,7 @@ module.exports = (cur) => {
         initClauses(config);
         initHint(config);
         initSort(config);
+        initLimit(config);
 
         next = createNextFn(config);
     }
