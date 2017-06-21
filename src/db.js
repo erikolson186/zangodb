@@ -159,9 +159,11 @@ class Db extends EventEmitter {
 
             for (let name in this._config) {
                 try {
-                    if (this._config[name]) {
+                    if (!this._config[name]) {
+                        idb.deleteObjectStore(name);
+                    } else if (!idb.objectStoreNames.contains(name)) {
                         this._addStore(idb, name);
-                    } else { idb.deleteObjectStore(name); }
+                    }
                 } catch (error) { return cb(error); }
             }
         };

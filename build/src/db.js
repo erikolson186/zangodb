@@ -234,10 +234,10 @@ var Db = function (_EventEmitter) {
 
                 for (var name in _this2._config) {
                     try {
-                        if (_this2._config[name]) {
-                            _this2._addStore(idb, name);
-                        } else {
+                        if (!_this2._config[name]) {
                             idb.deleteObjectStore(name);
+                        } else if (!idb.objectStoreNames.contains(name)) {
+                            _this2._addStore(idb, name);
                         }
                     } catch (error) {
                         return cb(error);
