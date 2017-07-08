@@ -83,7 +83,7 @@ The following expression operators are supported: `$literal`, `$add`, `$subtract
 
 ### Update Operators
 
-The following update operators are supported: `$set`, `$unset`, `$rename`, `$inc`, `$mul`, `$min`, `$max`, `$push`, `$pop`, and `$pull`.
+The following update operators are supported: `$set`, `$unset`, `$rename`, `$inc`, `$mul`, `$min`, `$max`, `$push`, `$pop`, `$pull`, and `$addToSet`.
 
 ### Group Operators
 

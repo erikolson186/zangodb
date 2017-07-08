@@ -96,6 +96,19 @@ const $pull = (path_pieces, value) => (doc) => {
     });
 };
 
+const $addToSet = (path_pieces, value) => (doc) => {
+    get(doc, path_pieces, (obj, field) => {
+        const elements = obj[field];
+        if (!Array.isArray(elements)) { return; }
+
+        for (let el of elements) {
+            if (equal(el, value)) { return; }
+        }
+
+        elements.push(value);
+    });
+};
+
 const ops = {
     $set,
     $unset,
@@ -106,7 +119,8 @@ const ops = {
     $max,
     $push,
     $pop,
-    $pull
+    $pull,
+    $addToSet
 };
 
 const build = (steps, field, value) => {

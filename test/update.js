@@ -248,3 +248,17 @@ describe('$pull', () => {
         }, done);
     });
 });
+
+describe('$addToSet', () => {
+    it('should add a unique value to an array', (done) => {
+        update({
+            $addToSet: { a: 3, n: 4 }
+        }, {
+            k: 3,
+            t: 4,
+            a: [3, 4],
+            n: [8, 2, 4],
+            m: { x: 80 }
+        }, done);
+    });
+});
