@@ -5,6 +5,7 @@ const {
     modify,
     remove1,
     rename,
+    equal,
     unknownOp,
     getIDBError
 } = require('./util.js');
@@ -51,7 +52,7 @@ const compareOp = (fn) => (path_pieces, value) => {
 };
 
 const $min = compareOp((a, b) => a < b);
-const $max = compareOp((a, b) => a >  b);
+const $max = compareOp((a, b) => a > b);
 
 const $push = (path_pieces, value) => {
     const update = (obj, field) => {
@@ -85,6 +86,16 @@ const $pop = (path_pieces, direction) => {
     };
 };
 
+const $pull = (path_pieces, value) => (doc) => {
+    get(doc, path_pieces, (obj, field) => {
+        const elements = obj[field];
+        if (!Array.isArray(elements)) { return; }
+
+        const filterFn = el => !equal(el, value);
+        obj[field] = elements.filter(filterFn);
+    });
+};
+
 const ops = {
     $set,
     $unset,
@@ -94,7 +105,8 @@ const ops = {
     $min,
     $max,
     $push,
-    $pop
+    $pop,
+    $pull
 };
 
 const build = (steps, field, value) => {

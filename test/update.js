@@ -222,7 +222,7 @@ describe('$push', () => {
 });
 
 describe('$pop', () => {
-    it('should remove a value of an array', (done) => {
+    it('should remove the first or last element of an array', (done) => {
         update({
             $pop: { a: 1, n: -1 }
         }, {
@@ -230,6 +230,20 @@ describe('$pop', () => {
             t: 4,
             a: [3],
             n: [2],
+            m: { x: 80 }
+        }, done);
+    });
+});
+
+describe('$pull', () => {
+    it('should remove instances of a value from an array', (done) => {
+        update({
+            $pull: { a: 4 }
+        }, {
+            k: 3,
+            t: 4,
+            a: [3],
+            n: [8, 2],
             m: { x: 80 }
         }, done);
     });
