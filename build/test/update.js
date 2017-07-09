@@ -11,7 +11,7 @@ var col = db.collection('col');
 var doc = {
     k: 3,
     t: 4,
-    a: [3, 4],
+    a: [3, 4, 8],
     n: [8, 2],
     m: { x: 80 }
 };
@@ -50,7 +50,7 @@ it('should set the value of a field without $set', function (done) {
         x: 10,
         k: 3,
         t: 4,
-        a: [3, 4],
+        a: [3, 4, 8],
         n: [8, 2],
         m: { x: 80 }
     }, done);
@@ -64,7 +64,7 @@ describe('$set', function () {
             x: 30,
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -76,7 +76,7 @@ describe('$set', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 30 }
         }, done);
@@ -89,7 +89,7 @@ describe('$unset', function () {
             $unset: { k: 1 }
         }, {
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -101,7 +101,7 @@ describe('$unset', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: {}
         }, done);
@@ -115,7 +115,7 @@ describe('$rename', function () {
         }, {
             g: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -127,7 +127,7 @@ describe('$rename', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { g: 80 }
         }, done);
@@ -141,7 +141,7 @@ describe('$inc', function () {
         }, {
             k: 5,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -153,7 +153,7 @@ describe('$inc', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 82 }
         }, done);
@@ -167,7 +167,7 @@ describe('$mul', function () {
         }, {
             k: 6,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -179,7 +179,7 @@ describe('$mul', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 160 }
         }, done);
@@ -193,7 +193,7 @@ describe('$min', function () {
         }, {
             k: 3,
             t: 1,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -207,7 +207,7 @@ describe('$max', function () {
         }, {
             k: 3,
             t: 10,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -221,7 +221,7 @@ describe('$push', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4, 9],
+            a: [3, 4, 8, 9],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -229,14 +229,56 @@ describe('$push', function () {
 });
 
 describe('$pop', function () {
-    it('should remove a value of an array', function (done) {
+    it('should remove the first or last element of an array', function (done) {
         update({
             $pop: { a: 1, n: -1 }
         }, {
             k: 3,
             t: 4,
-            a: [3],
+            a: [3, 4],
             n: [2],
+            m: { x: 80 }
+        }, done);
+    });
+});
+
+describe('$pullAll', function () {
+    it('', function (done) {
+        update({
+            $pullAll: { a: [3, 8] }
+        }, {
+            k: 3,
+            t: 4,
+            a: [4],
+            n: [8, 2],
+            m: { x: 80 }
+        }, done);
+    });
+});
+
+describe('$pull', function () {
+    it('should remove instances of a value from an array', function (done) {
+        update({
+            $pull: { a: 4 }
+        }, {
+            k: 3,
+            t: 4,
+            a: [3, 8],
+            n: [8, 2],
+            m: { x: 80 }
+        }, done);
+    });
+});
+
+describe('$addToSet', function () {
+    it('should add a unique value to an array', function (done) {
+        update({
+            $addToSet: { a: 3, n: 4 }
+        }, {
+            k: 3,
+            t: 4,
+            a: [3, 4, 8],
+            n: [8, 2, 4],
             m: { x: 80 }
         }, done);
     });

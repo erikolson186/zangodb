@@ -86,14 +86,31 @@ const $pop = (path_pieces, direction) => {
     };
 };
 
-const $pull = (path_pieces, value) => (doc) => {
+const $pullAll = (path_pieces, values) => (doc) => {
     get(doc, path_pieces, (obj, field) => {
         const elements = obj[field];
         if (!Array.isArray(elements)) { return; }
 
-        const filterFn = el => !equal(el, value);
-        obj[field] = elements.filter(filterFn);
+        const new_elements = [];
+
+        const hasValue = (value1) => {
+            for (let value2 of values) {
+                if (equal(value1, value2)) { return true; }
+            }
+        };
+
+        for (let element of elements) {
+            if (!hasValue(element)) {
+                new_elements.push(element);
+            }
+        }
+
+        obj[field] = new_elements;
     });
+};
+
+const $pull = (path_pieces, value) => {
+    return $pullAll(path_pieces, [value]);
 };
 
 const $addToSet = (path_pieces, value) => (doc) => {
@@ -119,6 +136,7 @@ const ops = {
     $max,
     $push,
     $pop,
+    $pullAll,
     $pull,
     $addToSet
 };

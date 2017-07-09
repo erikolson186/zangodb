@@ -4932,6 +4932,7 @@ var set = _require.set;
 var modify = _require.modify;
 var remove1 = _require.remove1;
 var rename = _require.rename;
+var equal = _require.equal;
 var unknownOp = _require.unknownOp;
 var getIDBError = _require.getIDBError;
 
@@ -5048,6 +5049,121 @@ var $pop = function $pop(path_pieces, direction) {
     };
 };
 
+var $pullAll = function $pullAll(path_pieces, values) {
+    return function (doc) {
+        get(doc, path_pieces, function (obj, field) {
+            var elements = obj[field];
+            if (!Array.isArray(elements)) {
+                return;
+            }
+
+            var new_elements = [];
+
+            var hasValue = function hasValue(value1) {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = values[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var value2 = _step.value;
+
+                        if (equal(value1, value2)) {
+                            return true;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            };
+
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = elements[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var element = _step2.value;
+
+                    if (!hasValue(element)) {
+                        new_elements.push(element);
+                    }
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+
+            obj[field] = new_elements;
+        });
+    };
+};
+
+var $pull = function $pull(path_pieces, value) {
+    return $pullAll(path_pieces, [value]);
+};
+
+var $addToSet = function $addToSet(path_pieces, value) {
+    return function (doc) {
+        get(doc, path_pieces, function (obj, field) {
+            var elements = obj[field];
+            if (!Array.isArray(elements)) {
+                return;
+            }
+
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+                for (var _iterator3 = elements[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var el = _step3.value;
+
+                    if (equal(el, value)) {
+                        return;
+                    }
+                }
+            } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
+                    }
+                } finally {
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
+                    }
+                }
+            }
+
+            elements.push(value);
+        });
+    };
+};
+
 var ops = {
     $set: $set,
     $unset: $unset,
@@ -5057,7 +5173,10 @@ var ops = {
     $min: $min,
     $max: $max,
     $push: $push,
-    $pop: $pop
+    $pop: $pop,
+    $pullAll: $pullAll,
+    $pull: $pull,
+    $addToSet: $addToSet
 };
 
 var build = function build(steps, field, value) {
@@ -5092,26 +5211,26 @@ module.exports = function (cur, spec, cb) {
                 return cb(error);
             }
 
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
 
             try {
-                for (var _iterator = steps[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var fn = _step.value;
+                for (var _iterator4 = steps[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var fn = _step4.value;
                     fn(doc);
                 }
             } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
                     }
                 } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
                     }
                 }
             }
@@ -7146,7 +7265,7 @@ var col = db.collection('col');
 var doc = {
     k: 3,
     t: 4,
-    a: [3, 4],
+    a: [3, 4, 8],
     n: [8, 2],
     m: { x: 80 }
 };
@@ -7185,7 +7304,7 @@ it('should set the value of a field without $set', function (done) {
         x: 10,
         k: 3,
         t: 4,
-        a: [3, 4],
+        a: [3, 4, 8],
         n: [8, 2],
         m: { x: 80 }
     }, done);
@@ -7199,7 +7318,7 @@ describe('$set', function () {
             x: 30,
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -7211,7 +7330,7 @@ describe('$set', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 30 }
         }, done);
@@ -7224,7 +7343,7 @@ describe('$unset', function () {
             $unset: { k: 1 }
         }, {
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -7236,7 +7355,7 @@ describe('$unset', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: {}
         }, done);
@@ -7250,7 +7369,7 @@ describe('$rename', function () {
         }, {
             g: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -7262,7 +7381,7 @@ describe('$rename', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { g: 80 }
         }, done);
@@ -7276,7 +7395,7 @@ describe('$inc', function () {
         }, {
             k: 5,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -7288,7 +7407,7 @@ describe('$inc', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 82 }
         }, done);
@@ -7302,7 +7421,7 @@ describe('$mul', function () {
         }, {
             k: 6,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -7314,7 +7433,7 @@ describe('$mul', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 160 }
         }, done);
@@ -7328,7 +7447,7 @@ describe('$min', function () {
         }, {
             k: 3,
             t: 1,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -7342,7 +7461,7 @@ describe('$max', function () {
         }, {
             k: 3,
             t: 10,
-            a: [3, 4],
+            a: [3, 4, 8],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -7356,7 +7475,7 @@ describe('$push', function () {
         }, {
             k: 3,
             t: 4,
-            a: [3, 4, 9],
+            a: [3, 4, 8, 9],
             n: [8, 2],
             m: { x: 80 }
         }, done);
@@ -7364,14 +7483,56 @@ describe('$push', function () {
 });
 
 describe('$pop', function () {
-    it('should remove a value of an array', function (done) {
+    it('should remove the first or last element of an array', function (done) {
         update({
             $pop: { a: 1, n: -1 }
         }, {
             k: 3,
             t: 4,
-            a: [3],
+            a: [3, 4],
             n: [2],
+            m: { x: 80 }
+        }, done);
+    });
+});
+
+describe('$pullAll', function () {
+    it('', function (done) {
+        update({
+            $pullAll: { a: [3, 8] }
+        }, {
+            k: 3,
+            t: 4,
+            a: [4],
+            n: [8, 2],
+            m: { x: 80 }
+        }, done);
+    });
+});
+
+describe('$pull', function () {
+    it('should remove instances of a value from an array', function (done) {
+        update({
+            $pull: { a: 4 }
+        }, {
+            k: 3,
+            t: 4,
+            a: [3, 8],
+            n: [8, 2],
+            m: { x: 80 }
+        }, done);
+    });
+});
+
+describe('$addToSet', function () {
+    it('should add a unique value to an array', function (done) {
+        update({
+            $addToSet: { a: 3, n: 4 }
+        }, {
+            k: 3,
+            t: 4,
+            a: [3, 4, 8],
+            n: [8, 2, 4],
             m: { x: 80 }
         }, done);
     });
@@ -7546,22 +7707,22 @@ function placeHoldersCount (b64) {
 
 function byteLength (b64) {
   // base64 is 4/3 + up to two characters of the original data
-  return b64.length * 3 / 4 - placeHoldersCount(b64)
+  return (b64.length * 3 / 4) - placeHoldersCount(b64)
 }
 
 function toByteArray (b64) {
-  var i, j, l, tmp, placeHolders, arr
+  var i, l, tmp, placeHolders, arr
   var len = b64.length
   placeHolders = placeHoldersCount(b64)
 
-  arr = new Arr(len * 3 / 4 - placeHolders)
+  arr = new Arr((len * 3 / 4) - placeHolders)
 
   // if there are placeholders, only get up to the last complete 4 chars
   l = placeHolders > 0 ? len - 4 : len
 
   var L = 0
 
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
+  for (i = 0; i < l; i += 4) {
     tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
     arr[L++] = (tmp >> 16) & 0xFF
     arr[L++] = (tmp >> 8) & 0xFF
@@ -26200,12 +26361,16 @@ function mergeObject(target, source, optionsArgument) {
 }
 
 function deepmerge(target, source, optionsArgument) {
-    var array = Array.isArray(source);
+    var sourceIsArray = Array.isArray(source);
+    var targetIsArray = Array.isArray(target);
     var options = optionsArgument || { arrayMerge: defaultArrayMerge };
-    var arrayMerge = options.arrayMerge || defaultArrayMerge;
+    var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
 
-    if (array) {
-        return Array.isArray(target) ? arrayMerge(target, source, optionsArgument) : cloneIfNecessary(source, optionsArgument)
+    if (!sourceAndTargetTypesMatch) {
+        return cloneIfNecessary(source, optionsArgument)
+    } else if (sourceIsArray) {
+        var arrayMerge = options.arrayMerge || defaultArrayMerge;
+        return arrayMerge(target, source, optionsArgument)
     } else {
         return mergeObject(target, source, optionsArgument)
     }
