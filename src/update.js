@@ -118,8 +118,8 @@ const $addToSet = (path_pieces, value) => (doc) => {
         const elements = obj[field];
         if (!Array.isArray(elements)) { return; }
 
-        for (let el of elements) {
-            if (equal(el, value)) { return; }
+        for (let element of elements) {
+            if (equal(element, value)) { return; }
         }
 
         elements.push(value);
