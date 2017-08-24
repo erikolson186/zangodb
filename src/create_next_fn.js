@@ -161,7 +161,7 @@ const initSort = (config) => {
     if (new_clauses.length) {
         config.clauses = new_clauses;
     } else {
-        pipeline.push([sort, spec]);
+        pipeline.unshift([sort, spec]);
     }
 };
 

@@ -13,19 +13,21 @@ var unknownOp = _require.unknownOp;
 var getIDBError = _require.getIDBError;
 
 
-var $set = function $set(path_pieces, value) {
+var ops = {};
+
+ops.$set = function (path_pieces, value) {
     return function (doc) {
         set(doc, path_pieces, value);
     };
 };
 
-var $unset = function $unset(path_pieces) {
+ops.$unset = function (path_pieces) {
     return function (doc) {
         return remove1(doc, path_pieces);
     };
 };
 
-var $rename = function $rename(path_pieces, new_name) {
+ops.$rename = function (path_pieces, new_name) {
     return function (doc) {
         rename(doc, path_pieces, new_name);
     };
@@ -55,10 +57,10 @@ var arithOp = function arithOp(fn) {
     };
 };
 
-var $inc = arithOp(function (a, b) {
+ops.$inc = arithOp(function (a, b) {
     return a + b;
 });
-var $mul = arithOp(function (a, b) {
+ops.$mul = arithOp(function (a, b) {
     return a * b;
 });
 
@@ -78,14 +80,14 @@ var compareOp = function compareOp(fn) {
     };
 };
 
-var $min = compareOp(function (a, b) {
+ops.$min = compareOp(function (a, b) {
     return a < b;
 });
-var $max = compareOp(function (a, b) {
+ops.$max = compareOp(function (a, b) {
     return a > b;
 });
 
-var $push = function $push(path_pieces, value) {
+ops.$push = function (path_pieces, value) {
     var update = function update(obj, field) {
         var elements = obj[field];
 
@@ -101,7 +103,7 @@ var $push = function $push(path_pieces, value) {
     return modifyOp(path_pieces, update, init);
 };
 
-var $pop = function $pop(path_pieces, direction) {
+ops.$pop = function (path_pieces, direction) {
     var pop = void 0;
 
     if (direction < 1) {
@@ -125,7 +127,7 @@ var $pop = function $pop(path_pieces, direction) {
     };
 };
 
-var $pullAll = function $pullAll(path_pieces, values) {
+ops.$pullAll = function (path_pieces, values) {
     return function (doc) {
         get(doc, path_pieces, function (obj, field) {
             var elements = obj[field];
@@ -196,11 +198,11 @@ var $pullAll = function $pullAll(path_pieces, values) {
     };
 };
 
-var $pull = function $pull(path_pieces, value) {
-    return $pullAll(path_pieces, [value]);
+ops.$pull = function (path_pieces, value) {
+    return ops.$pullAll(path_pieces, [value]);
 };
 
-var $addToSet = function $addToSet(path_pieces, value) {
+ops.$addToSet = function (path_pieces, value) {
     return function (doc) {
         get(doc, path_pieces, function (obj, field) {
             var elements = obj[field];
@@ -214,9 +216,9 @@ var $addToSet = function $addToSet(path_pieces, value) {
 
             try {
                 for (var _iterator3 = elements[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var el = _step3.value;
+                    var element = _step3.value;
 
-                    if (equal(el, value)) {
+                    if (equal(element, value)) {
                         return;
                     }
                 }
@@ -240,24 +242,9 @@ var $addToSet = function $addToSet(path_pieces, value) {
     };
 };
 
-var ops = {
-    $set: $set,
-    $unset: $unset,
-    $rename: $rename,
-    $inc: $inc,
-    $mul: $mul,
-    $min: $min,
-    $max: $max,
-    $push: $push,
-    $pop: $pop,
-    $pullAll: $pullAll,
-    $pull: $pull,
-    $addToSet: $addToSet
-};
-
 var build = function build(steps, field, value) {
     if (field[0] !== '$') {
-        return steps.push($set(toPathPieces(field), value));
+        return steps.push(ops.$set(toPathPieces(field), value));
     }
 
     var op = ops[field];

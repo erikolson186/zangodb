@@ -1,6 +1,6 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var deepMerge = require('deepmerge'),
     clone = require('clone'),
@@ -61,7 +61,7 @@ var isObject = function isObject(obj) {
     return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && obj !== null;
 };
 
-// Update a value or create it and it's path if it doesn't exist.
+// Update a value or create it and its path if it doesn't exist.
 var modify = function modify(obj, path_pieces, update, init) {
     var last = path_pieces[path_pieces.length - 1];
 

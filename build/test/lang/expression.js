@@ -249,7 +249,7 @@ describe('arithmetic', function () {
             expect(build({ y: { $trunc: 4 } }).has_refs).to.be.false;
         });
 
-        it("should truncate a number to it's integer", function () {
+        it("should truncate a number to its integer", function () {
             expect(evalExpr({ $trunc: 0 })).to.equal(0);
             expect(evalExpr({ $trunc: 7.80 })).to.equal(7);
             expect(evalExpr({ $trunc: '$x' }, { x: -2.3 })).to.equal(-2);
