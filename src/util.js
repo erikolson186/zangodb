@@ -49,7 +49,7 @@ const isObject = (obj) => {
     return typeof obj === 'object' && obj !== null;
 };
 
-// Update a value or create it and it's path if it doesn't exist.
+// Update a value or create it and its path if it doesn't exist.
 const modify = (obj, path_pieces, update, init) => {
     const last = path_pieces[path_pieces.length - 1];
 

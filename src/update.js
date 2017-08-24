@@ -10,13 +10,15 @@ const {
     getIDBError
 } = require('./util.js');
 
-const $set = (path_pieces, value) => (doc) => {
+const ops = {};
+
+ops.$set = (path_pieces, value) => (doc) => {
     set(doc, path_pieces, value);
 };
 
-const $unset = path_pieces => doc => remove1(doc, path_pieces);
+ops.$unset = path_pieces => doc => remove1(doc, path_pieces);
 
-const $rename = (path_pieces, new_name) => (doc) => {
+ops.$rename = (path_pieces, new_name) => (doc) => {
     rename(doc, path_pieces, new_name);
 };
 
@@ -38,8 +40,8 @@ const arithOp = (fn) => (path_pieces, value1) => {
     return modifyOp(path_pieces, update, init);
 };
 
-const $inc = arithOp((a, b) => a + b);
-const $mul = arithOp((a, b) => a * b);
+ops.$inc = arithOp((a, b) => a + b);
+ops.$mul = arithOp((a, b) => a * b);
 
 const compareOp = (fn) => (path_pieces, value) => {
     const update = (obj, field) => {
@@ -51,10 +53,10 @@ const compareOp = (fn) => (path_pieces, value) => {
     return modifyOp(path_pieces, update, init);
 };
 
-const $min = compareOp((a, b) => a < b);
-const $max = compareOp((a, b) => a > b);
+ops.$min = compareOp((a, b) => a < b);
+ops.$max = compareOp((a, b) => a > b);
 
-const $push = (path_pieces, value) => {
+ops.$push = (path_pieces, value) => {
     const update = (obj, field) => {
         const elements = obj[field];
 
@@ -68,7 +70,7 @@ const $push = (path_pieces, value) => {
     return modifyOp(path_pieces, update, init);
 };
 
-const $pop = (path_pieces, direction) => {
+ops.$pop = (path_pieces, direction) => {
     let pop;
 
     if (direction < 1) {
@@ -86,7 +88,7 @@ const $pop = (path_pieces, direction) => {
     };
 };
 
-const $pullAll = (path_pieces, values) => (doc) => {
+ops.$pullAll = (path_pieces, values) => (doc) => {
     get(doc, path_pieces, (obj, field) => {
         const elements = obj[field];
         if (!Array.isArray(elements)) { return; }
@@ -109,11 +111,11 @@ const $pullAll = (path_pieces, values) => (doc) => {
     });
 };
 
-const $pull = (path_pieces, value) => {
-    return $pullAll(path_pieces, [value]);
+ops.$pull = (path_pieces, value) => {
+    return ops.$pullAll(path_pieces, [value]);
 };
 
-const $addToSet = (path_pieces, value) => (doc) => {
+ops.$addToSet = (path_pieces, value) => (doc) => {
     get(doc, path_pieces, (obj, field) => {
         const elements = obj[field];
         if (!Array.isArray(elements)) { return; }
@@ -126,24 +128,9 @@ const $addToSet = (path_pieces, value) => (doc) => {
     });
 };
 
-const ops = {
-    $set,
-    $unset,
-    $rename,
-    $inc,
-    $mul,
-    $min,
-    $max,
-    $push,
-    $pop,
-    $pullAll,
-    $pull,
-    $addToSet
-};
-
 const build = (steps, field, value) => {
     if (field[0] !== '$') {
-        return steps.push($set(toPathPieces(field), value));
+        return steps.push(ops.$set(toPathPieces(field), value));
     }
 
     const op = ops[field];
