@@ -23,6 +23,8 @@ declare module "zangodb" {
 
         aggregate(pipeline: Object[]): Cursor;
         find(expr: Object, projection_spec?: Object): Cursor;
+        findOne(expr: Object, projection_spec?: Object,
+                cb?: ResultCallback<Object>): Promise<Object>;
         insert(docs: Object|Object[], cb?: Callback): Promise<void>;
         remove(expr: Object, cb?: Callback): Promise<void>;
         update(expr: Object, spec: Object, cb?: Callback): Promise<void>;

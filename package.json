@@ -1,6 +1,6 @@
 {
   "name": "zangodb",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "MongoDB-like interface for HTML5 IndexedDB",
   "main": "./build/src/index.js",
   "typings": "./src/zangodb.d.ts",
