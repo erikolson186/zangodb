@@ -1,6 +1,6 @@
 {
   "name": "zangodb",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "MongoDB-like interface for HTML5 IndexedDB",
   "main": "./build/src/index.js",
   "typings": "./src/zangodb.d.ts",
@@ -31,7 +31,7 @@
   "homepage": "https://github.com/erikolson186/zangodb#readme",
   "dependencies": {
     "clone": "^2.1.1",
-    "deepmerge": "^1.3.2",
+    "deepmerge": "^2.0.0",
     "memoizee": "^0.4.5",
     "object-hash": "^1.1.8",
     "q": "^1.5.0"
@@ -44,7 +44,7 @@
     "gulp-babel": "^7.0.0",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-uglify": "^3.0.0",
-    "mocha": "^3.4.2",
+    "mocha": "^4.0.1",
     "run-sequence": "^2.1.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
