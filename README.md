@@ -73,7 +73,7 @@ global.IDBKeyRange = require('fake-indexeddb/lib/FDBKeyRange');
 
 ### Filter Operators
 
-The following filter operators are supported: `$and`, `$or`, `$not`, `$nor`, `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$elemMatch` and `$exists`.
+The following filter operators are supported: `$and`, `$or`, `$not`, `$nor`, `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$elemMatch`, `$regex`, and `$exists`.
 
 ### Expression Operators
 

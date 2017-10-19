@@ -325,17 +325,33 @@ describe('$elemMatch', () => {
     });
 });
 
+describe('$regex', () => {
+    it("shouldn't find clauses for index", () => {
+        expect(getClauses({ s: { $regex: '' } })).to.have.lengthOf(0);
+    });
+
+    it('should test against a regular expression', () => {
+        const expr = { s: { $regex: /^[a-z]+$/ } };
+
+        expect(evalExpr(expr, { s: 'K' })).to.be.false;
+        expect(evalExpr(expr, { s: 'k' })).to.be.true;
+    });
+
+    it('should test against a regular expression with options', () => {
+        const expr = { s: { $regex: /^[a-z]+$/, $options: 'i' } };
+
+        expect(evalExpr(expr, { s: 'K' })).to.be.true;
+        expect(evalExpr(expr, { s: 'k' })).to.be.true;
+    });
+});
+
 describe('$exists', () => {
     it('should find clauses for index when exists is true', () => {
-        expect(getClauses({
-            x: { $exists: 1 }
-        })).to.have.lengthOf(1);
+        expect(getClauses({ x: { $exists: 1 } })).to.have.lengthOf(1);
     });
 
     it("shouldn't find clauses for index when exists is false", () => {
-        expect(getClauses({
-            x: { $exists: 0 }
-        })).to.have.lengthOf(0);
+        expect(getClauses({ x: { $exists: 0 } })).to.have.lengthOf(0);
     });
 
     it('should test if document contains a field', () => {

@@ -648,6 +648,39 @@ var ElemMatch = function (_Operator5) {
     return ElemMatch;
 }(Operator);
 
+var RegEx = function (_Operator6) {
+    _inherits(RegEx, _Operator6);
+
+    function RegEx(path, expr) {
+        _classCallCheck(this, RegEx);
+
+        var _this19 = _possibleConstructorReturn(this, Object.getPrototypeOf(RegEx).call(this));
+
+        _this19.path = path;
+        _this19.expr = expr;
+        return _this19;
+    }
+
+    _createClass(RegEx, [{
+        key: 'run',
+        value: function run(fields) {
+            var value = fields.get(this.path);
+            if (value === MISSING) {
+                return false;
+            }
+
+            return this.expr.test(value);
+        }
+    }, {
+        key: 'is_index_matchable',
+        get: function get() {
+            return false;
+        }
+    }]);
+
+    return RegEx;
+}(Operator);
+
 var $and = function $and(parent_args, args) {
     var _iteratorNormalCompletion5 = true;
     var _didIteratorError5 = false;
@@ -993,6 +1026,15 @@ var buildClause = function buildClause(parent_args, path, params) {
         }
 
         op_keys.delete('$elemMatch');
+    }
+
+    if (op_keys.has('$regex')) {
+        var expr = new RegExp(params.$regex, params.$options);
+
+        new_args.push(new RegEx(path, expr));
+
+        op_keys.delete('$regex');
+        op_keys.delete('$options');
     }
 
     if (params.$exists && !new_args.length) {

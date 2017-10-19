@@ -256,6 +256,24 @@ class ElemMatch extends Operator {
     }
 }
 
+class RegEx extends Operator {
+    constructor(path, expr) {
+        super();
+
+        this.path = path;
+        this.expr = expr;
+    }
+
+    get is_index_matchable() { return false; }
+
+    run(fields) {
+        const value = fields.get(this.path);
+        if (value === MISSING) { return false; }
+
+        return this.expr.test(value);
+    }
+}
+
 const $and = (parent_args, args) => {
     for (let expr of args) {
         const arg = build(expr);
@@ -433,6 +451,15 @@ const buildClause = (parent_args, path, params) => {
         if (op) { new_args.push(new ElemMatch(path, op)); }
 
         op_keys.delete('$elemMatch');
+    }
+
+    if (op_keys.has('$regex')) {
+        const expr = new RegExp(params.$regex, params.$options);
+
+        new_args.push(new RegEx(path, expr));
+
+        op_keys.delete('$regex');
+        op_keys.delete('$options');
     }
 
     if (params.$exists && !new_args.length) {

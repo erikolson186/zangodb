@@ -44,6 +44,7 @@
     "gulp-babel": "^7.0.0",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-uglify": "^3.0.0",
+    "babel-core": "^6.26.0",
     "mocha": "^4.0.1",
     "run-sequence": "^2.1.0",
     "vinyl-buffer": "^1.0.0",
