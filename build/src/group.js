@@ -1,7 +1,5 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -14,12 +12,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var memoize = require('memoizee');
 
-var _require = require('./util.js');
+var _require = require('./util.js'),
+    unknownOp = _require.unknownOp,
+    hashify = _require.hashify,
+    build = require('./lang/expression.js'),
+    Fields = require('./lang/fields.js');
 
-var unknownOp = _require.unknownOp;
-var hashify = _require.hashify;
-var build = require('./lang/expression.js');
-var Fields = require('./lang/fields.js');
 var Operator = function () {
     function Operator() {
         _classCallCheck(this, Operator);
@@ -28,8 +26,8 @@ var Operator = function () {
     _createClass(Operator, [{
         key: 'getOpValueWithRefs',
         value: function getOpValueWithRefs(expr, doc, cb) {
-            var ast = expr.ast;
-            var fields = expr.fields;
+            var ast = expr.ast,
+                fields = expr.fields;
 
 
             cb(ast.run(fields));
@@ -60,7 +58,7 @@ var Sum = function (_Operator) {
     function Sum() {
         _classCallCheck(this, Sum);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Sum).call(this));
+        var _this = _possibleConstructorReturn(this, (Sum.__proto__ || Object.getPrototypeOf(Sum)).call(this));
 
         _this._value = 0;
         return _this;
@@ -69,7 +67,7 @@ var Sum = function (_Operator) {
     _createClass(Sum, [{
         key: 'getOpValueWithRefs',
         value: function getOpValueWithRefs(expr, doc, cb) {
-            _get(Object.getPrototypeOf(Sum.prototype), 'getOpValueWithRefs', this).call(this, expr, doc, function (value) {
+            _get(Sum.prototype.__proto__ || Object.getPrototypeOf(Sum.prototype), 'getOpValueWithRefs', this).call(this, expr, doc, function (value) {
                 Sum._verify(value, cb);
             });
         }
@@ -88,7 +86,7 @@ var Sum = function (_Operator) {
     }, {
         key: 'getOpValue',
         value: function getOpValue(expr, cb) {
-            _get(Object.getPrototypeOf(Sum), 'getOpValue', this).call(this, expr, function (value) {
+            _get(Sum.__proto__ || Object.getPrototypeOf(Sum), 'getOpValue', this).call(this, expr, function (value) {
                 return Sum._verify(value, cb);
             });
         }
@@ -103,7 +101,7 @@ var Avg = function (_Sum) {
     function Avg() {
         _classCallCheck(this, Avg);
 
-        var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Avg).call(this));
+        var _this2 = _possibleConstructorReturn(this, (Avg.__proto__ || Object.getPrototypeOf(Avg)).call(this));
 
         _this2._count = 0;
         return _this2;
@@ -114,7 +112,7 @@ var Avg = function (_Sum) {
         value: function add(value) {
             this._count++;
 
-            _get(Object.getPrototypeOf(Avg.prototype), 'add', this).call(this, value);
+            _get(Avg.prototype.__proto__ || Object.getPrototypeOf(Avg.prototype), 'add', this).call(this, value);
         }
     }, {
         key: 'value',
@@ -132,7 +130,7 @@ var Compare = function (_Operator2) {
     function Compare(fn) {
         _classCallCheck(this, Compare);
 
-        var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Compare).call(this));
+        var _this3 = _possibleConstructorReturn(this, (Compare.__proto__ || Object.getPrototypeOf(Compare)).call(this));
 
         _this3._value = null;
         _this3._fn = fn;
@@ -176,7 +174,7 @@ var Min = function (_Compare) {
     function Min() {
         _classCallCheck(this, Min);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Min).call(this, function (a, b) {
+        return _possibleConstructorReturn(this, (Min.__proto__ || Object.getPrototypeOf(Min)).call(this, function (a, b) {
             return a < b;
         }));
     }
@@ -190,7 +188,7 @@ var Max = function (_Compare2) {
     function Max() {
         _classCallCheck(this, Max);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Max).call(this, function (a, b) {
+        return _possibleConstructorReturn(this, (Max.__proto__ || Object.getPrototypeOf(Max)).call(this, function (a, b) {
             return a > b;
         }));
     }
@@ -204,7 +202,7 @@ var Push = function (_Operator3) {
     function Push() {
         _classCallCheck(this, Push);
 
-        var _this6 = _possibleConstructorReturn(this, Object.getPrototypeOf(Push).call(this));
+        var _this6 = _possibleConstructorReturn(this, (Push.__proto__ || Object.getPrototypeOf(Push)).call(this));
 
         _this6._value = [];
         return _this6;
@@ -226,7 +224,7 @@ var AddToSet = function (_Operator4) {
     function AddToSet() {
         _classCallCheck(this, AddToSet);
 
-        var _this7 = _possibleConstructorReturn(this, Object.getPrototypeOf(AddToSet).call(this));
+        var _this7 = _possibleConstructorReturn(this, (AddToSet.__proto__ || Object.getPrototypeOf(AddToSet)).call(this));
 
         _this7._hashes = {};
         return _this7;
@@ -339,9 +337,9 @@ var groupLoopFn = function groupLoopFn(next, in_end, groups, fn) {
 };
 
 var createGroupByRefFn = function createGroupByRefFn(next, expr, steps) {
-    var in_start = steps.in_start;
-    var in_iter = steps.in_iter;
-    var in_end = steps.in_end;
+    var in_start = steps.in_start,
+        in_iter = steps.in_iter,
+        in_end = steps.in_end;
 
     var groups = [];
 
@@ -385,9 +383,9 @@ var createGroupFn = function createGroupFn(next, expr, steps) {
         return createGroupByRefFn(next, expr, steps);
     }
 
-    var in_start = steps.in_start;
-    var in_iter = steps.in_iter;
-    var in_end = steps.in_end;
+    var in_start = steps.in_start,
+        in_iter = steps.in_iter,
+        in_end = steps.in_end;
 
     var groups = [];
 
@@ -401,19 +399,13 @@ var createGroupFn = function createGroupFn(next, expr, steps) {
     };
 
     if (in_iter.length) {
-        var _ret = function () {
-            var add = memoize(function () {
-                return initGroupDoc();
-            });
+        var add = memoize(function () {
+            return initGroupDoc();
+        });
 
-            return {
-                v: groupLoopFn(next, in_end, groups, function (doc) {
-                    runSteps(in_iter, add(), doc);
-                })
-            };
-        }();
-
-        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+        return groupLoopFn(next, in_end, groups, function (doc) {
+            runSteps(in_iter, add(), doc);
+        });
     }
 
     return function (cb) {
@@ -439,9 +431,9 @@ var ops = {
 };
 
 var _build = function _build(steps, field, value) {
-    var in_start = steps.in_start;
-    var in_iter = steps.in_iter;
-    var in_end = steps.in_end;
+    var in_start = steps.in_start,
+        in_iter = steps.in_iter,
+        in_end = steps.in_end;
 
     var op_strs = Object.keys(value);
 

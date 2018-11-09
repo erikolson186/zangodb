@@ -8,15 +8,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Q = require('q');
 
-var _require = require('./util.js');
-
-var getIDBError = _require.getIDBError;
-var Cursor = require('./cursor.js');
-var _aggregate = require('./aggregate.js');
-var _update = require('./update.js');
-var _remove = require('./remove.js');
+var _require = require('./util.js'),
+    getIDBError = _require.getIDBError,
+    Cursor = require('./cursor.js'),
+    _aggregate = require('./aggregate.js'),
+    _update = require('./update.js'),
+    _remove = require('./remove.js');
 
 /** Class representing a collection. */
+
 
 var Collection = function () {
     /** <strong>Note:</strong> Do not instantiate directly. */

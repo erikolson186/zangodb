@@ -1,19 +1,17 @@
 'use strict';
 
-var _require = require('chai');
+var _require = require('chai'),
+    expect = _require.expect;
 
-var expect = _require.expect;
-
-var _require2 = require('../src/lang/filter.js');
-
-var build = _require2.build;
-var Fields = require('../src/lang/fields.js');
-var waterfall = require('./waterfall.js');
+var _require2 = require('../src/lang/filter.js'),
+    build = _require2.build,
+    Fields = require('../src/lang/fields.js'),
+    waterfall = require('./waterfall.js');
 
 var db = new zango.Db(Math.random(), { col: ['x', 'g'] });
 var col = db.collection('col');
 
-var docs = [{ x: 4, k: 8 }, { x: 2, g: 3 }, { x: 3, z: 3 }, { x: 6, g: 9 }, { x: 10, k: 4 }, { x: 2, g: 8 }, { x: 2, g: 8, z: 10 }, { x: undefined }, { x: null }, { x: [{ k: 2 }, { k: 8 }] }];
+var docs = [{ x: 4, k: 8 }, { x: 2, g: 3 }, { x: 3, z: 3 }, { x: 6, g: 9 }, { x: 10, k: 4 }, { x: 2, g: 8 }, { x: 2, g: 8, z: 10 }, { x: undefined }, { x: null }, { x: [{ k: 2 }, { k: 8 }, "barbaz"] }, { y: "foobar" }];
 
 before(function () {
     return col.insert(docs);
@@ -175,7 +173,17 @@ describe('$nin', function () {
 
 describe('$elemMatch', function () {
     it('should test if any iterable elements satisify a predicate', function (done) {
+        console.log(1);
         query({ x: { $elemMatch: { k: 8 } } }, done);
+        console.log(2);
+    });
+});
+
+describe('$elemMatch', function () {
+    it('should test if any iterable elements satisify a predicate', function (done) {
+        console.log(3);
+        query({ x: { $elemMatch: { $eq: "barbaz" } } }, done);
+        console.log(4);
     });
 });
 
@@ -186,5 +194,11 @@ describe('$exists', function () {
 
     it("should test if document doesn't contain a field", function (done) {
         query({ g: { $exists: 0 } }, done);
+    });
+});
+
+describe('$regex', function () {
+    it('should perform regular expression test', function (done) {
+        query({ y: { $regex: /oob/ } }, done);
     });
 });

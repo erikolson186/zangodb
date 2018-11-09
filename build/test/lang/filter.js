@@ -1,12 +1,10 @@
 'use strict';
 
-var _require = require('chai');
+var _require = require('chai'),
+    expect = _require.expect;
 
-var expect = _require.expect;
-
-var _require2 = require('../../src/lang/filter.js');
-
-var build = _require2.build;
+var _require2 = require('../../src/lang/filter.js'),
+    build = _require2.build;
 
 var Fields = require('../../src/lang/fields.js');
 

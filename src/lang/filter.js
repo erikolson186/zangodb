@@ -125,12 +125,26 @@ class Equal extends Operator {
     }
 
     run(fields) {
+
         const value = fields.get(this.path);
         if (value === MISSING) { return false; }
 
         return equal(value, this.value);
     }
 }
+
+class EqualValue extends Operator {
+    constructor(value) {
+        super();
+
+        this.value = value;
+    }
+
+    run(value) {
+        return equal(value, this.value);
+    }
+}
+
 
 class NotEqual extends Equal {
     get is_index_matchable() { return false; }
@@ -247,8 +261,12 @@ class ElemMatch extends Operator {
         const { op } = this;
 
         for (let obj of elements) {
-            if (isObject(obj) && op.run(new Fields(obj))) {
-                return true;
+            if (isObject(obj)) {
+                if (op.run(new Fields(obj)))
+                    return true;
+            } else if (op instanceof EqualValue) {
+                if (op.run(obj))
+                    return true;
             }
         }
 
@@ -446,9 +464,15 @@ const buildClause = (parent_args, path, params) => {
     }
 
     if (op_keys.has('$elemMatch')) {
-        const op = build(params.$elemMatch);
+        if (params.$elemMatch.$eq)
+            new_args.push(new ElemMatch(path, new EqualValue(params.$elemMatch.$eq)));
+        else {
+            const op = build(params.$elemMatch);
 
-        if (op) { new_args.push(new ElemMatch(path, op)); }
+            if (op) {
+                new_args.push(new ElemMatch(path, op));
+            }
+        }
 
         op_keys.delete('$elemMatch');
     }
