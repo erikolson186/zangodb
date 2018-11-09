@@ -10,11 +10,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _require = require('../util.js');
+var _require = require('../util.js'),
+    unknownOp = _require.unknownOp,
+    MISSING = require('./missing_symbol.js'),
+    Path = require('./path.js');
 
-var unknownOp = _require.unknownOp;
-var MISSING = require('./missing_symbol.js');
-var Path = require('./path.js');
 var Value = function () {
     function Value(value) {
         _classCallCheck(this, Value);
@@ -69,7 +69,7 @@ var NumberValue = function (_Value) {
     function NumberValue() {
         _classCallCheck(this, NumberValue);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(NumberValue).apply(this, arguments));
+        return _possibleConstructorReturn(this, (NumberValue.__proto__ || Object.getPrototypeOf(NumberValue)).apply(this, arguments));
     }
 
     _createClass(NumberValue, null, [{
@@ -88,7 +88,7 @@ var StringValue = function (_Value2) {
     function StringValue() {
         _classCallCheck(this, StringValue);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(StringValue).apply(this, arguments));
+        return _possibleConstructorReturn(this, (StringValue.__proto__ || Object.getPrototypeOf(StringValue)).apply(this, arguments));
     }
 
     _createClass(StringValue, null, [{
@@ -107,7 +107,7 @@ var ArrayValue = function (_Value3) {
     function ArrayValue() {
         _classCallCheck(this, ArrayValue);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ArrayValue).apply(this, arguments));
+        return _possibleConstructorReturn(this, (ArrayValue.__proto__ || Object.getPrototypeOf(ArrayValue)).apply(this, arguments));
     }
 
     _createClass(ArrayValue, null, [{
@@ -126,7 +126,7 @@ var DateValue = function (_Value4) {
     function DateValue() {
         _classCallCheck(this, DateValue);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(DateValue).apply(this, arguments));
+        return _possibleConstructorReturn(this, (DateValue.__proto__ || Object.getPrototypeOf(DateValue)).apply(this, arguments));
     }
 
     _createClass(DateValue, null, [{
@@ -145,7 +145,7 @@ var Literal = function (_Value5) {
     function Literal() {
         _classCallCheck(this, Literal);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Literal).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Literal.__proto__ || Object.getPrototypeOf(Literal)).apply(this, arguments));
     }
 
     _createClass(Literal, [{
@@ -188,14 +188,14 @@ var ObjectExpr = function (_Value6) {
     function ObjectExpr() {
         _classCallCheck(this, ObjectExpr);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ObjectExpr).apply(this, arguments));
+        return _possibleConstructorReturn(this, (ObjectExpr.__proto__ || Object.getPrototypeOf(ObjectExpr)).apply(this, arguments));
     }
 
     _createClass(ObjectExpr, [{
         key: 'run',
         value: function run(fields) {
-            var result = {};var value = this.value;
-
+            var result = {},
+                value = this.value;
 
             for (var field in value) {
                 result[field] = value[field].run(fields);
@@ -236,7 +236,7 @@ var FnOp = function (_Operator) {
     function FnOp(fn) {
         _classCallCheck(this, FnOp);
 
-        var _this7 = _possibleConstructorReturn(this, Object.getPrototypeOf(FnOp).call(this));
+        var _this7 = _possibleConstructorReturn(this, (FnOp.__proto__ || Object.getPrototypeOf(FnOp)).call(this));
 
         _this7.fn = fn;
         return _this7;
@@ -245,8 +245,8 @@ var FnOp = function (_Operator) {
     _createClass(FnOp, [{
         key: 'run',
         value: function run(fields) {
-            var args = this.args;
-            var fn = this.fn;
+            var args = this.args,
+                fn = this.fn;
 
 
             return args.map(function (arg) {
@@ -269,7 +269,7 @@ var UnaryFnOp = function (_FnOp) {
     function UnaryFnOp() {
         _classCallCheck(this, UnaryFnOp);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(UnaryFnOp).apply(this, arguments));
+        return _possibleConstructorReturn(this, (UnaryFnOp.__proto__ || Object.getPrototypeOf(UnaryFnOp)).apply(this, arguments));
     }
 
     _createClass(UnaryFnOp, [{
@@ -294,7 +294,7 @@ var fnOp = function fnOp(Parent, fn) {
         function _class() {
             _classCallCheck(this, _class);
 
-            return _possibleConstructorReturn(this, Object.getPrototypeOf(_class).call(this, fn));
+            return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, fn));
         }
 
         return _class;
@@ -302,7 +302,7 @@ var fnOp = function fnOp(Parent, fn) {
 };
 
 var opTypes = function opTypes(Parent, InputType) {
-    var ResultType = arguments.length <= 2 || arguments[2] === undefined ? InputType : arguments[2];
+    var ResultType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : InputType;
 
     var Constructor = function (_Parent2) {
         _inherits(Constructor, _Parent2);
@@ -310,7 +310,7 @@ var opTypes = function opTypes(Parent, InputType) {
         function Constructor() {
             _classCallCheck(this, Constructor);
 
-            return _possibleConstructorReturn(this, Object.getPrototypeOf(Constructor).apply(this, arguments));
+            return _possibleConstructorReturn(this, (Constructor.__proto__ || Object.getPrototypeOf(Constructor)).apply(this, arguments));
         }
 
         return Constructor;
@@ -328,7 +328,7 @@ var ArithOp = function (_opTypes) {
     function ArithOp() {
         _classCallCheck(this, ArithOp);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ArithOp).apply(this, arguments));
+        return _possibleConstructorReturn(this, (ArithOp.__proto__ || Object.getPrototypeOf(ArithOp)).apply(this, arguments));
     }
 
     return ArithOp;
@@ -344,7 +344,7 @@ var Add = function (_arithOp) {
     function Add() {
         _classCallCheck(this, Add);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Add).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Add.__proto__ || Object.getPrototypeOf(Add)).apply(this, arguments));
     }
 
     return Add;
@@ -358,7 +358,7 @@ var Subtract = function (_arithOp2) {
     function Subtract() {
         _classCallCheck(this, Subtract);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Subtract).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Subtract.__proto__ || Object.getPrototypeOf(Subtract)).apply(this, arguments));
     }
 
     return Subtract;
@@ -372,7 +372,7 @@ var Multiply = function (_arithOp3) {
     function Multiply() {
         _classCallCheck(this, Multiply);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Multiply).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Multiply.__proto__ || Object.getPrototypeOf(Multiply)).apply(this, arguments));
     }
 
     return Multiply;
@@ -386,7 +386,7 @@ var Divide = function (_arithOp4) {
     function Divide() {
         _classCallCheck(this, Divide);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Divide).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Divide.__proto__ || Object.getPrototypeOf(Divide)).apply(this, arguments));
     }
 
     return Divide;
@@ -400,7 +400,7 @@ var Mod = function (_arithOp5) {
     function Mod() {
         _classCallCheck(this, Mod);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Mod).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Mod.__proto__ || Object.getPrototypeOf(Mod)).apply(this, arguments));
     }
 
     return Mod;
@@ -414,7 +414,7 @@ var MathOp = function (_opTypes2) {
     function MathOp() {
         _classCallCheck(this, MathOp);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(MathOp).apply(this, arguments));
+        return _possibleConstructorReturn(this, (MathOp.__proto__ || Object.getPrototypeOf(MathOp)).apply(this, arguments));
     }
 
     _createClass(MathOp, [{
@@ -444,7 +444,7 @@ var Abs = function (_mathOp) {
     function Abs() {
         _classCallCheck(this, Abs);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Abs).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Abs.__proto__ || Object.getPrototypeOf(Abs)).apply(this, arguments));
     }
 
     return Abs;
@@ -456,7 +456,7 @@ var Ceil = function (_mathOp2) {
     function Ceil() {
         _classCallCheck(this, Ceil);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Ceil).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Ceil.__proto__ || Object.getPrototypeOf(Ceil)).apply(this, arguments));
     }
 
     return Ceil;
@@ -468,7 +468,7 @@ var Floor = function (_mathOp3) {
     function Floor() {
         _classCallCheck(this, Floor);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Floor).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Floor.__proto__ || Object.getPrototypeOf(Floor)).apply(this, arguments));
     }
 
     return Floor;
@@ -480,7 +480,7 @@ var Ln = function (_mathOp4) {
     function Ln() {
         _classCallCheck(this, Ln);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Ln).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Ln.__proto__ || Object.getPrototypeOf(Ln)).apply(this, arguments));
     }
 
     return Ln;
@@ -492,7 +492,7 @@ var Log10 = function (_mathOp5) {
     function Log10() {
         _classCallCheck(this, Log10);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Log10).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Log10.__proto__ || Object.getPrototypeOf(Log10)).apply(this, arguments));
     }
 
     return Log10;
@@ -504,7 +504,7 @@ var Pow = function (_mathOp6) {
     function Pow() {
         _classCallCheck(this, Pow);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Pow).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Pow.__proto__ || Object.getPrototypeOf(Pow)).apply(this, arguments));
     }
 
     return Pow;
@@ -516,7 +516,7 @@ var Sqrt = function (_mathOp7) {
     function Sqrt() {
         _classCallCheck(this, Sqrt);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Sqrt).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Sqrt.__proto__ || Object.getPrototypeOf(Sqrt)).apply(this, arguments));
     }
 
     return Sqrt;
@@ -528,7 +528,7 @@ var Trunc = function (_mathOp8) {
     function Trunc() {
         _classCallCheck(this, Trunc);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Trunc).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Trunc.__proto__ || Object.getPrototypeOf(Trunc)).apply(this, arguments));
     }
 
     return Trunc;
@@ -540,7 +540,7 @@ var StringConcatOp = function (_opTypes3) {
     function StringConcatOp() {
         _classCallCheck(this, StringConcatOp);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(StringConcatOp).apply(this, arguments));
+        return _possibleConstructorReturn(this, (StringConcatOp.__proto__ || Object.getPrototypeOf(StringConcatOp)).apply(this, arguments));
     }
 
     return StringConcatOp;
@@ -552,7 +552,7 @@ var Concat = function (_fnOp) {
     function Concat() {
         _classCallCheck(this, Concat);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Concat).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Concat.__proto__ || Object.getPrototypeOf(Concat)).apply(this, arguments));
     }
 
     return Concat;
@@ -566,7 +566,7 @@ var CaseOp = function (_opTypes4) {
     function CaseOp() {
         _classCallCheck(this, CaseOp);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(CaseOp).apply(this, arguments));
+        return _possibleConstructorReturn(this, (CaseOp.__proto__ || Object.getPrototypeOf(CaseOp)).apply(this, arguments));
     }
 
     _createClass(CaseOp, [{
@@ -585,7 +585,7 @@ var ToLower = function (_fnOp2) {
     function ToLower() {
         _classCallCheck(this, ToLower);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ToLower).apply(this, arguments));
+        return _possibleConstructorReturn(this, (ToLower.__proto__ || Object.getPrototypeOf(ToLower)).apply(this, arguments));
     }
 
     return ToLower;
@@ -599,7 +599,7 @@ var ToUpper = function (_fnOp3) {
     function ToUpper() {
         _classCallCheck(this, ToUpper);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ToUpper).apply(this, arguments));
+        return _possibleConstructorReturn(this, (ToUpper.__proto__ || Object.getPrototypeOf(ToUpper)).apply(this, arguments));
     }
 
     return ToUpper;
@@ -613,7 +613,7 @@ var ConcatArraysOp = function (_opTypes5) {
     function ConcatArraysOp() {
         _classCallCheck(this, ConcatArraysOp);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ConcatArraysOp).apply(this, arguments));
+        return _possibleConstructorReturn(this, (ConcatArraysOp.__proto__ || Object.getPrototypeOf(ConcatArraysOp)).apply(this, arguments));
     }
 
     return ConcatArraysOp;
@@ -625,7 +625,7 @@ var ConcatArrays = function (_fnOp4) {
     function ConcatArrays() {
         _classCallCheck(this, ConcatArrays);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ConcatArrays).apply(this, arguments));
+        return _possibleConstructorReturn(this, (ConcatArrays.__proto__ || Object.getPrototypeOf(ConcatArrays)).apply(this, arguments));
     }
 
     return ConcatArrays;
@@ -639,7 +639,7 @@ var DateOp = function (_opTypes6) {
     function DateOp() {
         _classCallCheck(this, DateOp);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(DateOp).apply(this, arguments));
+        return _possibleConstructorReturn(this, (DateOp.__proto__ || Object.getPrototypeOf(DateOp)).apply(this, arguments));
     }
 
     return DateOp;
@@ -655,7 +655,7 @@ var DayOfMonth = function (_dateOp) {
     function DayOfMonth() {
         _classCallCheck(this, DayOfMonth);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(DayOfMonth).apply(this, arguments));
+        return _possibleConstructorReturn(this, (DayOfMonth.__proto__ || Object.getPrototypeOf(DayOfMonth)).apply(this, arguments));
     }
 
     return DayOfMonth;
@@ -669,7 +669,7 @@ var Year = function (_dateOp2) {
     function Year() {
         _classCallCheck(this, Year);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Year).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Year.__proto__ || Object.getPrototypeOf(Year)).apply(this, arguments));
     }
 
     return Year;
@@ -683,7 +683,7 @@ var Month = function (_dateOp3) {
     function Month() {
         _classCallCheck(this, Month);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Month).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Month.__proto__ || Object.getPrototypeOf(Month)).apply(this, arguments));
     }
 
     return Month;
@@ -697,7 +697,7 @@ var Hour = function (_dateOp4) {
     function Hour() {
         _classCallCheck(this, Hour);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Hour).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Hour.__proto__ || Object.getPrototypeOf(Hour)).apply(this, arguments));
     }
 
     return Hour;
@@ -711,7 +711,7 @@ var Minute = function (_dateOp5) {
     function Minute() {
         _classCallCheck(this, Minute);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Minute).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Minute.__proto__ || Object.getPrototypeOf(Minute)).apply(this, arguments));
     }
 
     return Minute;
@@ -725,7 +725,7 @@ var Second = function (_dateOp6) {
     function Second() {
         _classCallCheck(this, Second);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Second).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Second.__proto__ || Object.getPrototypeOf(Second)).apply(this, arguments));
     }
 
     return Second;
@@ -739,7 +739,7 @@ var Millisecond = function (_dateOp7) {
     function Millisecond() {
         _classCallCheck(this, Millisecond);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Millisecond).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Millisecond.__proto__ || Object.getPrototypeOf(Millisecond)).apply(this, arguments));
     }
 
     return Millisecond;
@@ -751,8 +751,8 @@ var TypeCond = function () {
     function TypeCond(stack, args, op) {
         _classCallCheck(this, TypeCond);
 
-        var InputType = op.InputType;
-        var alt = op.alt;
+        var InputType = op.InputType,
+            alt = op.alt;
 
 
         this.result_types = new Set([op.ResultType, alt.ResultType]);
@@ -766,9 +766,9 @@ var TypeCond = function () {
     _createClass(TypeCond, [{
         key: 'run',
         value: function run(fields) {
-            var stack = this.stack;
-            var isType = this.isType;
-            var op = this.op;
+            var stack = this.stack,
+                isType = this.isType,
+                op = this.op;
 
             var new_args = [];
 

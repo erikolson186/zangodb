@@ -45,7 +45,7 @@ var Cursor = function (_EventEmitter) {
     function Cursor(col, read_pref) {
         _classCallCheck(this, Cursor);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Cursor).call(this));
+        var _this = _possibleConstructorReturn(this, (Cursor.__proto__ || Object.getPrototypeOf(Cursor)).call(this));
 
         _this._col = col;
         _this._read_pref = read_pref;
@@ -90,7 +90,7 @@ var Cursor = function (_EventEmitter) {
     }, {
         key: 'forEach',
         value: function forEach() {
-            var fn = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
+            var fn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
             var cb = arguments[1];
 
             var deferred = Q.defer();

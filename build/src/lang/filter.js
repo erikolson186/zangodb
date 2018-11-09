@@ -14,12 +14,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _require = require('../util.js');
-
-var isObject = _require.isObject;
-var equal = _require.equal;
-var unknownOp = _require.unknownOp;
-
+var _require = require('../util.js'),
+    isObject = _require.isObject,
+    equal = _require.equal,
+    unknownOp = _require.unknownOp;
 
 var MISSING = require('./missing_symbol.js'),
     Path = require('./path.js'),
@@ -101,7 +99,7 @@ var Connective = function (_Operator) {
     function Connective(args) {
         _classCallCheck(this, Connective);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Connective).call(this));
+        var _this = _possibleConstructorReturn(this, (Connective.__proto__ || Object.getPrototypeOf(Connective)).call(this));
 
         _this.args = args;
         return _this;
@@ -116,7 +114,7 @@ var Conjunction = function (_Connective) {
     function Conjunction() {
         _classCallCheck(this, Conjunction);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Conjunction).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Conjunction.__proto__ || Object.getPrototypeOf(Conjunction)).apply(this, arguments));
     }
 
     _createClass(Conjunction, [{
@@ -182,7 +180,7 @@ var Disjunction = function (_Connective2) {
     function Disjunction() {
         _classCallCheck(this, Disjunction);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Disjunction).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Disjunction.__proto__ || Object.getPrototypeOf(Disjunction)).apply(this, arguments));
     }
 
     _createClass(Disjunction, [{
@@ -233,7 +231,7 @@ var Negation = function (_Conjunction) {
     function Negation() {
         _classCallCheck(this, Negation);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Negation).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Negation.__proto__ || Object.getPrototypeOf(Negation)).apply(this, arguments));
     }
 
     _createClass(Negation, [{
@@ -244,7 +242,7 @@ var Negation = function (_Conjunction) {
     }, {
         key: 'run',
         value: function run(fields) {
-            return !_get(Object.getPrototypeOf(Negation.prototype), 'run', this).call(this, fields);
+            return !_get(Negation.prototype.__proto__ || Object.getPrototypeOf(Negation.prototype), 'run', this).call(this, fields);
         }
     }]);
 
@@ -257,7 +255,7 @@ var Exists = function (_Operator2) {
     function Exists(path, bool) {
         _classCallCheck(this, Exists);
 
-        var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(Exists).call(this));
+        var _this5 = _possibleConstructorReturn(this, (Exists.__proto__ || Object.getPrototypeOf(Exists)).call(this));
 
         _this5.path = path;
         _this5.bool = bool;
@@ -285,7 +283,7 @@ var Equal = function (_Operator3) {
     function Equal(path, value) {
         _classCallCheck(this, Equal);
 
-        var _this6 = _possibleConstructorReturn(this, Object.getPrototypeOf(Equal).call(this));
+        var _this6 = _possibleConstructorReturn(this, (Equal.__proto__ || Object.getPrototypeOf(Equal)).call(this));
 
         _this6.path = path;
         _this6.value = value;
@@ -295,6 +293,7 @@ var Equal = function (_Operator3) {
     _createClass(Equal, [{
         key: 'run',
         value: function run(fields) {
+
             var value = fields.get(this.path);
             if (value === MISSING) {
                 return false;
@@ -317,19 +316,41 @@ var Equal = function (_Operator3) {
     return Equal;
 }(Operator);
 
+var EqualValue = function (_Operator4) {
+    _inherits(EqualValue, _Operator4);
+
+    function EqualValue(value) {
+        _classCallCheck(this, EqualValue);
+
+        var _this7 = _possibleConstructorReturn(this, (EqualValue.__proto__ || Object.getPrototypeOf(EqualValue)).call(this));
+
+        _this7.value = value;
+        return _this7;
+    }
+
+    _createClass(EqualValue, [{
+        key: 'run',
+        value: function run(value) {
+            return equal(value, this.value);
+        }
+    }]);
+
+    return EqualValue;
+}(Operator);
+
 var NotEqual = function (_Equal) {
     _inherits(NotEqual, _Equal);
 
     function NotEqual() {
         _classCallCheck(this, NotEqual);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(NotEqual).apply(this, arguments));
+        return _possibleConstructorReturn(this, (NotEqual.__proto__ || Object.getPrototypeOf(NotEqual)).apply(this, arguments));
     }
 
     _createClass(NotEqual, [{
         key: 'run',
         value: function run(fields) {
-            return !_get(Object.getPrototypeOf(NotEqual.prototype), 'run', this).call(this, fields);
+            return !_get(NotEqual.prototype.__proto__ || Object.getPrototypeOf(NotEqual.prototype), 'run', this).call(this, fields);
         }
     }, {
         key: 'is_index_matchable',
@@ -341,18 +362,18 @@ var NotEqual = function (_Equal) {
     return NotEqual;
 }(Equal);
 
-var Range = function (_Operator4) {
-    _inherits(Range, _Operator4);
+var Range = function (_Operator5) {
+    _inherits(Range, _Operator5);
 
     function Range(path, fns, values) {
         _classCallCheck(this, Range);
 
-        var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(Range).call(this));
+        var _this9 = _possibleConstructorReturn(this, (Range.__proto__ || Object.getPrototypeOf(Range)).call(this));
 
-        _this8.path = path;
-        _this8.fns = fns;
-        _this8.values = values;
-        return _this8;
+        _this9.path = path;
+        _this9.fns = fns;
+        _this9.values = values;
+        return _this9;
     }
 
     _createClass(Range, [{
@@ -364,8 +385,8 @@ var Range = function (_Operator4) {
                 return false;
             }
 
-            var fns = this.fns;
-            var values = this.values;
+            var fns = this.fns,
+                values = this.values;
 
 
             for (var i = 0; i < fns.length; i++) {
@@ -397,7 +418,7 @@ var rangeMixin = function rangeMixin() {
         function _class(path, values) {
             _classCallCheck(this, _class);
 
-            return _possibleConstructorReturn(this, Object.getPrototypeOf(_class).call(this, path, fns, values));
+            return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, path, fns, values));
         }
 
         return _class;
@@ -423,7 +444,7 @@ var Gt = function (_rangeMixin) {
     function Gt() {
         _classCallCheck(this, Gt);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Gt).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Gt.__proto__ || Object.getPrototypeOf(Gt)).apply(this, arguments));
     }
 
     _createClass(Gt, [{
@@ -444,7 +465,7 @@ var Gte = function (_rangeMixin2) {
     function Gte() {
         _classCallCheck(this, Gte);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Gte).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Gte.__proto__ || Object.getPrototypeOf(Gte)).apply(this, arguments));
     }
 
     _createClass(Gte, [{
@@ -465,7 +486,7 @@ var Lt = function (_rangeMixin3) {
     function Lt() {
         _classCallCheck(this, Lt);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Lt).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Lt.__proto__ || Object.getPrototypeOf(Lt)).apply(this, arguments));
     }
 
     _createClass(Lt, [{
@@ -486,7 +507,7 @@ var Lte = function (_rangeMixin4) {
     function Lte() {
         _classCallCheck(this, Lte);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Lte).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Lte.__proto__ || Object.getPrototypeOf(Lte)).apply(this, arguments));
     }
 
     _createClass(Lte, [{
@@ -507,7 +528,7 @@ var GtLt = function (_rangeMixin5) {
     function GtLt() {
         _classCallCheck(this, GtLt);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(GtLt).apply(this, arguments));
+        return _possibleConstructorReturn(this, (GtLt.__proto__ || Object.getPrototypeOf(GtLt)).apply(this, arguments));
     }
 
     _createClass(GtLt, [{
@@ -528,7 +549,7 @@ var GteLt = function (_rangeMixin6) {
     function GteLt() {
         _classCallCheck(this, GteLt);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(GteLt).apply(this, arguments));
+        return _possibleConstructorReturn(this, (GteLt.__proto__ || Object.getPrototypeOf(GteLt)).apply(this, arguments));
     }
 
     _createClass(GteLt, [{
@@ -549,7 +570,7 @@ var GtLte = function (_rangeMixin7) {
     function GtLte() {
         _classCallCheck(this, GtLte);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(GtLte).apply(this, arguments));
+        return _possibleConstructorReturn(this, (GtLte.__proto__ || Object.getPrototypeOf(GtLte)).apply(this, arguments));
     }
 
     _createClass(GtLte, [{
@@ -570,7 +591,7 @@ var GteLte = function (_rangeMixin8) {
     function GteLte() {
         _classCallCheck(this, GteLte);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(GteLte).apply(this, arguments));
+        return _possibleConstructorReturn(this, (GteLte.__proto__ || Object.getPrototypeOf(GteLte)).apply(this, arguments));
     }
 
     _createClass(GteLte, [{
@@ -585,17 +606,17 @@ var GteLte = function (_rangeMixin8) {
     return GteLte;
 }(rangeMixin(gte, lte));
 
-var ElemMatch = function (_Operator5) {
-    _inherits(ElemMatch, _Operator5);
+var ElemMatch = function (_Operator6) {
+    _inherits(ElemMatch, _Operator6);
 
     function ElemMatch(path, op) {
         _classCallCheck(this, ElemMatch);
 
-        var _this18 = _possibleConstructorReturn(this, Object.getPrototypeOf(ElemMatch).call(this));
+        var _this19 = _possibleConstructorReturn(this, (ElemMatch.__proto__ || Object.getPrototypeOf(ElemMatch)).call(this));
 
-        _this18.path = path;
-        _this18.op = op;
-        return _this18;
+        _this19.path = path;
+        _this19.op = op;
+        return _this19;
     }
 
     _createClass(ElemMatch, [{
@@ -617,8 +638,10 @@ var ElemMatch = function (_Operator5) {
                 for (var _iterator4 = elements[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
                     var obj = _step4.value;
 
-                    if (isObject(obj) && op.run(new Fields(obj))) {
-                        return true;
+                    if (isObject(obj)) {
+                        if (op.run(new Fields(obj))) return true;
+                    } else if (op instanceof EqualValue) {
+                        if (op.run(obj)) return true;
                     }
                 }
             } catch (err) {
@@ -648,17 +671,17 @@ var ElemMatch = function (_Operator5) {
     return ElemMatch;
 }(Operator);
 
-var RegEx = function (_Operator6) {
-    _inherits(RegEx, _Operator6);
+var RegEx = function (_Operator7) {
+    _inherits(RegEx, _Operator7);
 
     function RegEx(path, expr) {
         _classCallCheck(this, RegEx);
 
-        var _this19 = _possibleConstructorReturn(this, Object.getPrototypeOf(RegEx).call(this));
+        var _this20 = _possibleConstructorReturn(this, (RegEx.__proto__ || Object.getPrototypeOf(RegEx)).call(this));
 
-        _this19.path = path;
-        _this19.expr = expr;
-        return _this19;
+        _this20.path = path;
+        _this20.expr = expr;
+        return _this20;
     }
 
     _createClass(RegEx, [{
@@ -875,11 +898,9 @@ var buildRange = function buildRange(new_args, path, params, op_keys) {
 
     try {
         for (var _iterator9 = ranges[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-            var _step9$value = _toArray(_step9.value);
-
-            var RangeOp = _step9$value[0];
-
-            var range_keys = _step9$value.slice(1);
+            var _step9$value = _toArray(_step9.value),
+                RangeOp = _step9$value[0],
+                range_keys = _step9$value.slice(1);
 
             var result = build(RangeOp, range_keys);
 
@@ -1019,10 +1040,12 @@ var buildClause = function buildClause(parent_args, path, params) {
     }
 
     if (op_keys.has('$elemMatch')) {
-        var op = build(params.$elemMatch);
+        if (params.$elemMatch.$eq) new_args.push(new ElemMatch(path, new EqualValue(params.$elemMatch.$eq)));else {
+            var op = build(params.$elemMatch);
 
-        if (op) {
-            new_args.push(new ElemMatch(path, op));
+            if (op) {
+                new_args.push(new ElemMatch(path, op));
+            }
         }
 
         op_keys.delete('$elemMatch');

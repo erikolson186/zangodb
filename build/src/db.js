@@ -14,9 +14,8 @@ var EventEmitter = require('events'),
     memoize = require('memoizee'),
     Q = require('q');
 
-var _require = require('./util.js');
-
-var getIDBError = _require.getIDBError;
+var _require = require('./util.js'),
+    getIDBError = _require.getIDBError;
 
 var Collection = require('./collection.js');
 
@@ -68,7 +67,7 @@ var Db = function (_EventEmitter) {
     function Db(name, version, config) {
         _classCallCheck(this, Db);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Db).call(this));
+        var _this = _possibleConstructorReturn(this, (Db.__proto__ || Object.getPrototypeOf(Db)).call(this));
 
         _this._name = name;
 

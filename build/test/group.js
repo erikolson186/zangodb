@@ -1,9 +1,7 @@
 'use strict';
 
-var _require = require('chai');
-
-var expect = _require.expect;
-
+var _require = require('chai'),
+    expect = _require.expect;
 
 var docs = [{ x: 2, g: 1 }, { x: 2, g: 4 }, { x: 2, g: 4 }, { x: 2, g: 3 }, { x: 8, g: 8 }, { x: 8, g: 8 }, { x: 8, g: 6 }, { x: 8, g: 2 }];
 

@@ -17,7 +17,8 @@ const docs = [
     { x: 2, g: 8, z: 10 },
     { x: undefined },
     { x: null },
-    { x: [{ k: 2 }, { k: 8 }] }
+    { x: [{ k: 2 }, { k: 8 }, "barbaz"] },
+    { y: "foobar" }
 ];
 
 before(() => col.insert(docs));
@@ -151,9 +152,20 @@ describe('$nin', () => {
 
 describe('$elemMatch', () => {
     it('should test if any iterable elements satisify a predicate', (done) => {
+        console.log(1);
         query({ x: { $elemMatch: { k: 8 } } }, done);
+        console.log(2);
     });
 });
+
+describe('$elemMatch', () => {
+    it('should test if any iterable elements satisify a predicate', (done) => {
+        console.log(3);
+        query({ x: { $elemMatch: { $eq: "barbaz" }} }, done);
+        console.log(4);
+    });
+});
+
 
 describe('$exists', () => {
     it('should test if document contains a field', (done) => {
@@ -162,5 +174,11 @@ describe('$exists', () => {
 
     it("should test if document doesn't contain a field", (done) => {
         query({ g: { $exists: 0 } }, done);
+    });
+});
+
+describe('$regex', () => {
+    it('should perform regular expression test', (done) => {
+        query({ y: { $regex: /oob/ } }, done);
     });
 });
